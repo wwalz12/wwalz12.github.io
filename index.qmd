@@ -1,10 +1,8 @@
 ---
-title: "wwalz12.github.io"
+title: "William Walz"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Hi, this is for my Data Science class.
 
 ```{r}
 1 + 1
