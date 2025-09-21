@@ -1,5 +1,6 @@
 ---
 title: "William Walz"
+image: goldengate.jpg
 ---
 
 Hi, this is for my Data Science class.
