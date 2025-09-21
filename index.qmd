@@ -1,10 +1,20 @@
 ---
 title: "William Walz"
 image: goldengate.jpg
+toc: false
+about:
+  template: marquee
+  image-shape: rectangle
+  links:
+    - text: LinkedIn
+      href: www.linkedin.com/in/williamlwalz
+    - text: GitHub
+      href: https://github.com/wwalz12
+    - text: Email
+      href: mailto:wlws2024@mymail.pomona.edu
 ---
 
 Hi, this is for my Data Science class.
 
-```{r}
-1 + 1
+```{}
 ```
