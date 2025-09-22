@@ -8,7 +8,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - DataViz.qmd
+      - dataviz.qmd
       - resources.qmd
 
 format:

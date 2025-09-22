@@ -1,5 +1,5 @@
 ---
-title: "DataViz"
+title: "Data Visualization 1"
 ---
 
 About this site
@@ -7,6 +7,8 @@ About this site
 ```{r}
 
 library(tidyverse)
+
+artists <- read_csv("artists.csv")
 
 top_birth_years <- artists |>
   filter(!is.na(yearOfBirth)) |>
