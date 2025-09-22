@@ -1,9 +1,8 @@
 ---
-title: "About"
+title: "DataViz"
 ---
 
 About this site
 
-```{r}
-1 + 1
+```{}
 ```
