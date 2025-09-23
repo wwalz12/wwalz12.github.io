@@ -1,5 +1,5 @@
 ---
-title: "Data Visualization 1"
+title: "Data Visualization 2"
 description: "Analysis of Chocolate Data from TidyTuesday"
 author: William Walz
 date: September 22, 2025
