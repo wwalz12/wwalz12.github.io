@@ -7,7 +7,7 @@ about:
   image-shape: rectangle
   links:
     - text: LinkedIn
-      href: www.linkedin.com/in/williamlwalz
+      href: https://www.linkedin.com/in/williamlwalz
     - text: GitHub
       href: https://github.com/wwalz12
     - text: Email
