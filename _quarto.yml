@@ -3,14 +3,17 @@ project:
   output-dir: docs
 
 website:
-  title: "wwalz12.github.io"
+  title: "William Walz"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - dataviz.qmd
-      - resources.qmd
-
+      - text: Data Visualizations
+        menu:
+          - href: dataviz.html
+            text: Artist Births
+          - href: chocolate.qmd
+            text: Chocolate
 format:
   html:
     theme:

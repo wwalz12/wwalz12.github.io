@@ -1,8 +1,15 @@
 ---
 title: "Data Visualization 1"
+description: "Analysis of Artists Data from TidyTuesday"
+author: William Walz
+date: September 22, 2025
+format: html
+execute: 
+  warning: false
+  message: false
 ---
 
-About this site
+This dataset contains information on artists, including their names, genders, birth years, and places of origin. Here, I created a visualization the top 5 artist birth years to find the years that produced the most artists. The bar chart at the bottom displays the five most common years of birth in the dataset.\
 
 ```{r}
 
@@ -33,3 +40,7 @@ ggplot(top_birth_years, aes(x = reorder(as.factor(yearOfBirth), n), y = n)) +
   theme_minimal()
 
 ```
+
+The TidyTuesday data can be found at: <https://github.com/rfordatascience/tidytuesday/blob/main/data/2021/2021-01-12/artists.csv>
+
+This data comes from the Tate Art Museum (original GitHub link): <https://github.com/tategallery/collection>
