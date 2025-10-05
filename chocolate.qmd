@@ -36,16 +36,6 @@ ggplot(top_bean_countries, aes(x = reorder(country_of_bean_origin, n), y = n)) +
   theme_minimal()
 ```
 
+The TidyTuesday data can be found at: <https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18>
 
-The TidyTuesday data can be found at: 
-https://github.com/rfordatascience/tidytuesday/blob/main/data/2022/2022-01-18/chocolate.csv
-
-This data comes from Flavors of Cacao by way of Georgios and Kelsey. (original link):
-https://flavorsofcacao.com/chocolate_database.html
-
-
-
-
-
-
-
+This data comes from Flavors of Cacao by way of Georgios and Kelsey. (original link): <https://flavorsofcacao.com/chocolate_database.html>

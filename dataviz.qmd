@@ -41,6 +41,6 @@ ggplot(top_birth_years, aes(x = reorder(as.factor(yearOfBirth), n), y = n)) +
 
 ```
 
-The TidyTuesday data can be found at: <https://github.com/rfordatascience/tidytuesday/blob/main/data/2021/2021-01-12/artists.csv>
+The TidyTuesday data can be found at: <https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-01-12>
 
 This data comes from the Tate Art Museum (original GitHub link): <https://github.com/tategallery/collection>
