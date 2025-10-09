@@ -129,10 +129,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./text-analysis.html" aria-current="page"> 
-<span class="menu-text">Text Analysis</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-visualizations" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Data Visualizations</span>
@@ -145,6 +141,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="./chocolate.html">
  <span class="dropdown-text">Chocolate</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./text-analysis.html">
+ <span class="dropdown-text">Text Analysis</span></a>
   </li>  
     </ul>
   </li>
@@ -165,6 +165,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#data-nicholas-j.-horton-federalistpapers-dataset.-csv-used-title_author.csv." id="toc-data-nicholas-j.-horton-federalistpapers-dataset.-csv-used-title_author.csv." class="nav-link" data-scroll-target="#data-nicholas-j.-horton-federalistpapers-dataset.-csv-used-title_author.csv.">Data: Nicholas J. Horton, FederalistPapers dataset. CSV used: title_author.csv.</a></li>
+  <li><a href="#source-httpsgithub.comnicholasjhortonfederalistpapers" id="toc-source-httpsgithub.comnicholasjhortonfederalistpapers" class="nav-link" data-scroll-target="#source-httpsgithub.comnicholasjhortonfederalistpapers">Source: https://github.com/nicholasjhorton/FederalistPapers</a></li>
   </ul>
 </nav>
     </div>
@@ -263,6 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3 Jay             5       31.2</code></pre>
 </div>
 </div>
+<p>This table summarizes the average cleaned title length (in characters) by author. Madison’s titles are longest on average, while Hamilton and Jay tend to use slightly shorter titles. Madison had 29 papers, Hamilton 51, and Jay 5.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -289,6 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3 Madison         69.0</code></pre>
 </div>
 </div>
+<p>Here I found titles that began with “The” using str_detect(*). The positive lookahead (?=\b) made sure that the “The” was matched as a whole word at the start.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -311,6 +315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>This chart visualizes the differences in average title length across authors, and puts into perspective the table from by_author. Madison shows the highest mean character count, suggesting that he may have had a preference for longer or more descriptive titles. Jay has the lowest mean count, with Hamilton in the middle of the two.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -332,6 +337,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>This plot shows the share of each author’s titles that start with “The.” Differences are small, particularly between Hamilton and Jay (with Hamilton having the highest by a very tiny margin), but the pattern displays variation in how authors write their titles.</p>
+</section>
+<section id="data-nicholas-j.-horton-federalistpapers-dataset.-csv-used-title_author.csv." class="level1">
+<h1>Data: Nicholas J. Horton, FederalistPapers dataset. CSV used: title_author.csv.</h1>
+</section>
+<section id="source-httpsgithub.comnicholasjhortonfederalistpapers" class="level1">
+<h1>Source: https://github.com/nicholasjhorton/FederalistPapers</h1>
 
 
 </section>
