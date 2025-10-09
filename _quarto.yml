@@ -8,6 +8,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: text-analysis.qmd
+        text: Text Analysis
       - text: Data Visualizations
         menu:
           - href: dataviz.html
