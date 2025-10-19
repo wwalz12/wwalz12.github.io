@@ -13,8 +13,8 @@ execute:
 ---
 
 # Overview
-I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles.
 
+I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles.
 
 ```{r}
 library(tidyverse)
@@ -25,7 +25,6 @@ titles <- read_csv("title_author.csv")
 
 head(titles)
 ```
-
 
 ```{r}
 titles_clean <- titles |>
@@ -48,9 +47,7 @@ by_author
 
 ```
 
-
 This table summarizes the average cleaned title length (in characters) by author. Madison’s titles are longest on average, while Hamilton and Jay tend to use slightly shorter titles. Madison had 29 papers, Hamilton 51, and Jay 5.
-
 
 ```{r}
 titles_clean_copy <- titles_clean
@@ -68,7 +65,7 @@ titles_starting_with_the <- titles_clean |>
 titles_starting_with_the
 ```
 
-Here I found titles that began with "The" using str_detect(*). The positive lookahead (?=\\b) made sure that the "The" was matched as a whole word at the start. 
+Here I found titles that began with "The" using str_detect(\*). The positive lookahead (?=\\b) made sure that the "The" was matched as a whole word at the start.
 
 ```{r}
 ggplot(by_author, aes(x = author, y = mean_chars)) + 
@@ -99,8 +96,4 @@ ggplot(titles_starting_with_the, aes(x = author, y = avg_use_the)) +
 
 This plot shows the share of each author’s titles that start with "The." Differences are small, particularly between Hamilton and Jay (with Hamilton having the highest by a very tiny margin), but the pattern displays variation in how authors write their titles.
 
-
-
-
-Data: Nicholas J. Horton, FederalistPapers dataset. CSV used: title_author.csv.
-Source: https://github.com/nicholasjhorton/FederalistPapers
+Data: Nicholas J. Horton, FederalistPapers dataset. CSV used: title_author.csv. Source: <https://github.com/nicholasjhorton/FederalistPapers>
