@@ -16,6 +16,8 @@ website:
             text: Chocolate
           - href: text-analysis.qmd
             text: Text Analysis
+          - href: project3.qmd
+            text: Life Expectancy
 format:
   html:
     theme:
