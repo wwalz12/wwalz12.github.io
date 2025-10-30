@@ -17,7 +17,7 @@ website:
           - href: text-analysis.qmd
             text: Text Analysis
           - href: project3.qmd
-            text: Life Expectancy
+            text: Life Expectancy Comparison
 format:
   html:
     theme:
