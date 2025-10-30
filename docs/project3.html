@@ -173,6 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#observed-difference-asia---africa" id="toc-observed-difference-asia---africa" class="nav-link" data-scroll-target="#observed-difference-asia---africa">Observed Difference (Asia - Africa)</a></li>
   <li><a href="#null-sampling-distribution" id="toc-null-sampling-distribution" class="nav-link" data-scroll-target="#null-sampling-distribution">Null sampling distribution</a></li>
   <li><a href="#visualize-observed-ave-diff" id="toc-visualize-observed-ave-diff" class="nav-link" data-scroll-target="#visualize-observed-ave-diff">Visualize! (observed ave diff)</a></li>
+  <li><a href="#visualize-observed-med-diff" id="toc-visualize-observed-med-diff" class="nav-link" data-scroll-target="#visualize-observed-med-diff">Visualize! (observed med diff)</a></li>
   <li><a href="#p-value" id="toc-p-value" class="nav-link" data-scroll-target="#p-value">p-value</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#data-sources-and-references" id="toc-data-sources-and-references" class="nav-link" data-scroll-target="#data-sources-and-references">Data Sources and References:</a></li>
@@ -381,7 +382,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The histogram above shows the null distribution of mean differences generated from the permutations. Each bar represents one possible difference that could occur by random chance if continent didn’t matter. The red line shows the observed mean difference from the real data (15.9 years). Because the red line is far to the right of almost all simulated values, the observed difference is extremely unlikely to be due to chance which provides strong evidence that the continents differ in mean life expectancy (Reject null hypothesis that (lifeExp) in Asia and Africa are not the same).</p>
-<p>#Visualize! (observed med diff)</p>
+</section>
+<section id="visualize-observed-med-diff" class="level1">
+<h1>Visualize! (observed med diff)</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -430,10 +433,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
+<p>In this project, I used a permutation simulation to test whether Asia and Africa differ in mean and median life expectancy. After 3,000 random label shuffles, the observed differences were much larger than any values from the null distribution. The p-values were 0, suggesting that the observed gap in life expectancy is absolutely not due to chance. This supports the conclusion that people in Asia generally live longer than those in Africa.</p>
 </section>
 <section id="data-sources-and-references" class="level1">
 <h1>Data Sources and References:</h1>
-<p>Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from https://www.gapminder.org/data/</p>
+<p>Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from <a href="https://www.gapminder.org/data/">Gapminder Foundation</a></p>
 
 
 </section>

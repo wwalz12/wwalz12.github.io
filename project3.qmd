@@ -131,7 +131,7 @@ permut_stats |>
 
 The histogram above shows the null distribution of mean differences generated from the permutations. Each bar represents one possible difference that could occur by random chance if continent didn’t matter. The red line shows the observed mean difference from the real data (15.9 years). Because the red line is far to the right of almost all simulated values, the observed difference is extremely unlikely to be due to chance which provides strong evidence that the continents differ in mean life expectancy (Reject null hypothesis that (lifeExp) in Asia and Africa are not the same).
 
-#Visualize! (observed med diff)
+# Visualize! (observed med diff)
 
 ```{r}
 #observed med diff
@@ -164,10 +164,9 @@ The p-value shows how likely it is to see a difference this large just by chance
 
 # Conclusion
 
-
+In this project, I used a permutation simulation to test whether Asia and Africa differ in mean and median life expectancy. After 3,000 random label shuffles, the observed differences were much larger than any values from the null distribution. The p-values were 0, suggesting that the observed gap in life expectancy is absolutely not due to chance. This supports the conclusion that people in Asia generally live longer than those in Africa.
 
 # Data Sources and References:
-Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from https://www.gapminder.org/data/
-
+Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from [Gapminder Foundation](https://www.gapminder.org/data/)
 
 
