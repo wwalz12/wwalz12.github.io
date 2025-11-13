@@ -48,9 +48,9 @@ ggplot(keep_2007, aes(x = continent, y = lifeExp, fill = continent)) +
 
 Above is the original data, in boxplots that show life expectancy distributions for the two continents in 2007. Each box is representing the spread of life expectancy within that continent. The plot shows that most Asian countries tend to have higher life expectancies than African countries, but there's some overlap between the groups as well.
 
-
 # Observed Difference (Asia - Africa)
-Why? In a permutation test, you calculate the difference in means to create a null distribution that represents what you would expect if there was not an actual difference in the groups. 
+
+Why? In a permutation test, you calculate the difference in means to create a null distribution that represents what you would expect if there was not an actual difference in the groups.
 
 ```{r}
 # first, summary by continent
@@ -113,7 +113,6 @@ permut_stats <- map(1:3000, shuffle_sim, data = keep_2007) |>
 permut_stats |> head()
 ```
 
-
 # Visualize! (observed ave diff)
 
 ```{r}
@@ -167,6 +166,5 @@ The p-value shows how likely it is to see a difference this large just by chance
 In this project, I used a permutation simulation to test whether Asia and Africa differ in mean and median life expectancy. After 3,000 random label shuffles, the observed differences were much larger than any values from the null distribution. The p-values were 0, suggesting that the observed gap in life expectancy is absolutely not due to chance. This supports the conclusion that people in Asia generally live longer than those in Africa.
 
 # Data Sources and References:
+
 Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from [Gapminder Foundation](https://www.gapminder.org/data/)
-
-

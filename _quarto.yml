@@ -18,6 +18,8 @@ website:
             text: Text Analysis
           - href: project3.qmd
             text: Life Expectancy Comparison
+          - href: AmazonBias.qmd
+            text: Amazon Biased Robot
 format:
   html:
     theme:
