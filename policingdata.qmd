@@ -1,0 +1,183 @@
+---
+title: "Project 5: Analzying US Traffic Stops"
+description: "SQL-based analysis of stop demographics, violations, and search outcomes"
+author: William Walz
+date: December 6, 2025
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show code"
+execute: 
+  warning: false
+  message: false
+---
+
+Police traffic stops generate large amounts of administrative data: when and where each stop occurred, the driver's reported race, reason for the stop, and whether any searches or contraband findings occurred. The Stanford Open Policing Project (Pierson et al., 2020) compiles these records from a multitude of agencies across the United States into one database. For this project, I use SQL to explore three distinct aspects of traffic stop patterns. 
+
+Specifically, I analyze [1] how the racial composition of traffic stops in New York City changed between 2010–2018, [2] the most frequently recorded traffic violations in Houston, Texas, and [3] the relationship between search rates and "hit rates" (contraband found by police) by race in Florida. All of the data wrangling is conducted in SQL. R is used only to visualize or format the summarized results. 
+
+Each section below uses a different table, includes SQL queries only for wrangling, and presents a table or labeled figure, followed by a narrative explanation of what the output shows.
+
+### Racial Distribution of Stops Over Time: New York City
+
+Here, I examine how the racial composition of traffic stops in New York City changes over time. The following SQL query groups the NYC dataset by year and race, counts the number of stops in each category, and restricts the results to full calendar years.
+
+```{r}
+library(DBI)
+library(RMariaDB)
+library(dbplyr)
+
+con_traffic <- DBI::dbConnect(
+  RMariaDB::MariaDB(),
+  dbname = "traffic",
+  host = Sys.getenv("TRAFFIC_HOST"),
+  user = Sys.getenv("TRAFFIC_USER"),
+  password = Sys.getenv("TRAFFIC_PWD")
+)
+```
+
+
+```{sql, connection=con_traffic, output.var="ny_stops"}
+SELECT
+  subject_race AS race,
+  COUNT(*)     AS n_stops,
+  YEAR(date)   AS year
+FROM ny_statewide_2020_04_01
+WHERE subject_race IS NOT NULL
+GROUP BY race, year
+HAVING year BETWEEN 2010 AND 2018;
+```
+
+
+*Figure 1. Traffic Stops in New York City by Race and Year*
+
+```{r}
+library(ggplot2)
+library(bit64)
+library(dplyr)
+library(scales)
+
+ny_stops_clean <- ny_stops |>
+  mutate(across(where(bit64::is.integer64), as.integer))
+
+ggplot(ny_stops_clean, aes(x = year, y = n_stops, color = race)) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = comma_format()) +
+  labs(
+    title = "Traffic Stops in New York State by Race and Year",
+    x = "Year",
+    y = "Number of Stops",
+    color = "Race"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+*What does this mean?*
+
+Figure 1 shows the raw number of traffic stops in New York State by race and year. Across 2010–2017, white drivers account for the largest number of recorded stops, with counts declining slightly over time. Black and Hispanic drivers each make up a smaller but steadily growing share of stops, while Asian/Pacific Islander and “other” categories remain comparatively low throughout the period. 
+
+Importantly, this figure summarizes counts, not rates. It does not tell us whether any group is stopped more or less often relative to its share of the driving population. To study disproportionality, we would need to compare each group’s share of stops to its share of drivers, as well as consider where the stops occur (for example, upstate vs. New York City). Recent analysis by the New York Civil Liberties Union of NYPD vehicle stop data takes exactly that approach and finds that in New York City, Black and Latinx drivers are “disproportionately stopped...while they represent approximately 22 percent and 23 percent of the driving population” (NYCLU, 2025). However, my statewide plot is descriptive: it shows how total stop counts are distributed across race and time, but it does not on its own establish whether any group is being over or under-policed.
+
+### Most Common Types of Traffic Stops: San Bernardino, California
+
+For the second part of the analysis, I examine the types of stops most frequently recorded in San Bernardino (30 mins from Claremont!). Unlike some other jurisdictions in the SOPP database, San Bernardino does not report detailed violation codes. Instead, each stop is categorized using a general type field. The SQL query below counts how often each stop type appears and orders the results from most to least common.
+
+```{sql, connection=con_traffic, output.var="sb_types"}
+SELECT
+type AS stop_type,
+COUNT(*) AS type_count
+FROM ca_san_bernardino_2020_04_01
+GROUP BY stop_type
+ORDER BY type_count DESC;
+```
+
+*Visualization: Distribution of Stop Types*
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(scales)
+
+sb_types_clean <- sb_types |>
+mutate(stop_type = reorder(stop_type, type_count))
+
+ggplot(sb_types_clean, aes(x = stop_type, y = type_count)) +
+  geom_col(fill = "#4C72B0") +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(
+    title = "Most Frequent Stop Types in San Bernardino",
+    subtitle = "Based on aggregated stop categories recorded by the agency",
+    x = "Stop Type",
+    y = "Number of Stops"
+    ) +
+  theme_minimal(base_size = 14)
+```
+
+
+*What does this mean?*
+
+
+
+***Search Rates and Hit Rates by Race: Florida***
+
+Finally, I analyze decisions around searches and their outcomes. "Search rate" measures how often officers conduct a search; "hit rate" measures how often searches reveal contraband. These metrics can reveal whether search decisions are applied evenly across demographic groups.
+
+Search Rates
+```{sql connection=}
+SELECT
+  subject_race AS race,
+  COUNT(*)     AS total_stops,
+  SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) AS num_searches,
+  1.0 * SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) / COUNT(*) AS search_rate
+FROM fl_statewide_2020_04_01
+GROUP BY race;
+```
+
+Hit Rates
+```{sql connection=}
+SELECT
+  subject_race AS race,
+  SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) AS num_searches,
+  SUM(CASE WHEN search_conducted = 1 AND contraband_found = 1 THEN 1 ELSE 0 END) AS num_hits,
+  1.0 *
+    SUM(CASE WHEN search_conducted = 1 AND contraband_found = 1 THEN 1 ELSE 0 END)
+      / NULLIF(SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END), 0)
+      AS hit_rate
+FROM fl_statewide_2020_04_01
+GROUP BY race;
+```
+
+*Plot orssbsbsbhbsihbsihbs Table: Search Rate vs Hit Rate*
+
+
+
+*What does this mean?*
+
+
+
+***Conclusion***
+
+
+
+
+
+
+
+
+**Sources**
+
+Stanford Open Policing Project (SOPP) Data. 
+Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: [https://openpolicing.stanford.edu](https://openpolicing.stanford.edu). Pierson et al. (2020).
+
+New York City Demographic Data. 
+U.S. Census Bureau. New York, New York – Profile (Profile ID 16000US3651000). 
+Demographics can be found at: [https://censusreporter.org/profiles/16000US3651000-new-york-ny/](https://censusreporter.org/profiles/16000US3651000-new-york-ny/)
+
+(Note: CensusReporter provides a visualization layer, but all values originate from the U.S. Census Bureau.)
+
+***References***
+
+
+

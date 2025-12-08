@@ -20,6 +20,8 @@ website:
             text: Life Expectancy Comparison
           - href: AmazonBias.qmd
             text: Amazon Biased Robot
+          - href: policingdata.qmd
+            text: Analyzing US Policing Data
 format:
   html:
     theme:

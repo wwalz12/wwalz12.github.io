@@ -15,3 +15,4 @@ about:
 ---
 
 Hi, this is for my Data Science class! I've made two visualizations of random TidyTuesday datasets for Project 1, and two more visualizations for Project 2.
+
