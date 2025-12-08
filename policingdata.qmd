@@ -18,9 +18,13 @@ Specifically, I analyze [1] how the racial composition of traffic stops in New Y
 
 Each section below uses a different table, includes SQL queries only for wrangling, and presents a table or labeled figure, followed by a narrative explanation of what the output shows.
 
-### Racial Distribution of Stops Over Time: New York City
+### Racial Distribution of Traffic Stops Over Time: New York State
 
-Here, I examine how the racial composition of traffic stops in New York City changes over time. The following SQL query groups the NYC dataset by year and race, counts the number of stops in each category, and restricts the results to full calendar years.
+To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State has changed over time. The goal here is descriptive rather than causal. I summarize the data as it appears in the tables without making claims about why these patterns occur or what underlying mechanisms may explain them. 
+
+The SQL query below groups stops by race and year from 2010-2018 and counts the number of stops in each category. Because the total number of stops varies much across years, I convert these counts into percentages so that each group’s share of all stops can be compared consistently over time. 
+
+It is important to note that these percentages reflect the distribution within the stop dataset itself, not the demographic composition of New York State’s driving population, nor the population as a whole. Therefore, the results show how the dataset is structured rather than making any statement about disparities or policing practices.
 
 ```{r}
 library(DBI)
@@ -40,16 +44,15 @@ con_traffic <- DBI::dbConnect(
 ```{sql, connection=con_traffic, output.var="ny_stops"}
 SELECT
   subject_race AS race,
-  COUNT(*)     AS n_stops,
-  YEAR(date)   AS year
+  COUNT(*) AS n_stops,
+  YEAR(date) AS year
 FROM ny_statewide_2020_04_01
 WHERE subject_race IS NOT NULL
 GROUP BY race, year
 HAVING year BETWEEN 2010 AND 2018;
 ```
 
-
-*Figure 1. Traffic Stops in New York City by Race and Year*
+*Figure 1. Traffic Stops in New York City by Race and Year as %*
 
 ```{r}
 library(ggplot2)
@@ -60,14 +63,22 @@ library(scales)
 ny_stops_clean <- ny_stops |>
   mutate(across(where(bit64::is.integer64), as.integer))
 
-ggplot(ny_stops_clean, aes(x = year, y = n_stops, color = race)) +
+ny_stops_pct <- ny_stops_clean |>
+  group_by(year) |>
+  mutate(
+    total_stops_year = sum(n_stops),
+    pct = n_stops / total_stops_year * 100
+  ) |>
+  ungroup()
+
+ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
   geom_line(linewidth = 1.1) +
   geom_point(size = 2) +
-  scale_y_continuous(labels = comma_format()) +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
   labs(
-    title = "Traffic Stops in New York State by Race and Year",
+    title = "Percent of Traffic Stops in New York State by Race and Year",
     x = "Year",
-    y = "Number of Stops",
+    y = "Percent of Stops",
     color = "Race"
   ) +
   theme_minimal(base_size = 14)
@@ -75,40 +86,58 @@ ggplot(ny_stops_clean, aes(x = year, y = n_stops, color = race)) +
 
 *What does this mean?*
 
-Figure 1 shows the raw number of traffic stops in New York State by race and year. Across 2010–2017, white drivers account for the largest number of recorded stops, with counts declining slightly over time. Black and Hispanic drivers each make up a smaller but steadily growing share of stops, while Asian/Pacific Islander and “other” categories remain comparatively low throughout the period. 
+The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all of the years, the majority of stops in this dataset involved individuals classified as white, with their share gradually declining from roughly 78% in 2010 to around 70% by 2018. Other groups make up much smaller proportions of the dataset, though their relative shares show slight increases over time. For example, stops recorded as Black rise from about 10% to approximately 15%, and Hispanic stops increase from roughly 6% to about 9% by 2018. 
 
-Importantly, this figure summarizes counts, not rates. It does not tell us whether any group is stopped more or less often relative to its share of the driving population. To study disproportionality, we would need to compare each group’s share of stops to its share of drivers, as well as consider where the stops occur (for example, upstate vs. New York City). Recent analysis by the New York Civil Liberties Union of NYPD vehicle stop data takes exactly that approach and finds that in New York City, Black and Latinx drivers are “disproportionately stopped...while they represent approximately 22 percent and 23 percent of the driving population” (NYCLU, 2025). However, my statewide plot is descriptive: it shows how total stop counts are distributed across race and time, but it does not on its own establish whether any group is being over or under-policed.
+It is important to emphasize that these percentages describe the distribution of stops within the SOPP dataset, not the underlying driving population or the general population of New York State. Without denominators (such as the racial composition of licensed drivers or traffic volume data) we cannot draw conclusions about disparities or exposure to police stops. The figure should therefore be interpreted strictly as a summary of how the stop records themselves are distributed across racial categories over time, rather than as evidence of the causes or consequences of those patterns.
 
-### Most Common Types of Traffic Stops: San Bernardino, California
+### Most Common Types of Traffic Stops: Long Beach and San Bernardino, California
 
-For the second part of the analysis, I examine the types of stops most frequently recorded in San Bernardino (30 mins from Claremont!). Unlike some other jurisdictions in the SOPP database, San Bernardino does not report detailed violation codes. Instead, each stop is categorized using a general type field. The SQL query below counts how often each stop type appears and orders the results from most to least common.
+For the second part of the analysis, I compare how different agencies categorize traffic stops. Both Long Beach and San Bernardino report stop types, but neither provides detailed violation codes of what each specifically means. Instead, each uses broad categories such as vehicular or pedestrian, or other (bikes, scooters, etc.). The following SQL queries count how many times each stop type appears in each agency’s data.
+
+```{sql, connection=con_traffic, output.var="lb_types"}
+SELECT
+type AS stop_type,
+COUNT(*) AS type_count,
+'Long Beach' AS city
+FROM ca_long_beach_2020_04_01
+GROUP BY stop_type;
+```
 
 ```{sql, connection=con_traffic, output.var="sb_types"}
 SELECT
 type AS stop_type,
-COUNT(*) AS type_count
+COUNT(*) AS type_count,
+'San Bernardino' AS city
 FROM ca_san_bernardino_2020_04_01
-GROUP BY stop_type
-ORDER BY type_count DESC;
+GROUP BY stop_type;
 ```
 
-*Visualization: Distribution of Stop Types*
+
+*Visualization: Comparing Stop Type Distributions Across Two Agencies*
 
 ```{r}
 library(ggplot2)
 library(dplyr)
 library(scales)
 
-sb_types_clean <- sb_types |>
-mutate(stop_type = reorder(stop_type, type_count))
+# Combination of Long Beach & San Bernardino results
 
-ggplot(sb_types_clean, aes(x = stop_type, y = type_count)) +
+combined_types <- bind_rows(lb_types, sb_types) |>
+  mutate(
+    stop_type = ifelse(is.na(stop_type) | stop_type == "", "NA", stop_type)
+    ) |>
+  group_by(city) |>
+  mutate(stop_type = reorder(stop_type, type_count)) |>
+  ungroup()
+
+ggplot(combined_types, aes(x = stop_type, y = type_count)) +
   geom_col(fill = "#4C72B0") +
   coord_flip() +
   scale_y_continuous(labels = comma) +
+  facet_wrap(~ city, nrow = 1, scales = "free_x") +
   labs(
-    title = "Most Frequent Stop Types in San Bernardino",
-    subtitle = "Based on aggregated stop categories recorded by the agency",
+    title = "Distribution of Stop Types Across Two California Agencies",
+    subtitle = "Long Beach vs. San Bernardino",
     x = "Stop Type",
     y = "Number of Stops"
     ) +
@@ -120,36 +149,73 @@ ggplot(sb_types_clean, aes(x = stop_type, y = type_count)) +
 
 
 
-***Search Rates and Hit Rates by Race: Florida***
+then for the interpretation after long beach is high level pedestriaan. na could be bikes, scooters, 
 
-Finally, I analyze decisions around searches and their outcomes. "Search rate" measures how often officers conduct a search; "hit rate" measures how often searches reveal contraband. These metrics can reveal whether search decisions are applied evenly across demographic groups.
+### Search Rates and Frisk Rates by Race: Florida
 
-Search Rates
-```{sql connection=}
+In the final part of this project, I analyze how often police searches and frisks occur during traffic stops in Florida, and how those decisions differ by race. The dataset includes search_conducted (whether any search occurred) and frisk_performed (whether a pat-down occurred). 
+
+Before computing rates, I combined ambiguous racial categories such as NA, "unknown", and "other" into a single group labeled "unknown/other". These entries are recorded inconsistently and do not correspond to a clearly defined racial group. In the raw data, for example, the NA category had an unusually high frisk rate, which almost certainly reflects missing or miscoded values rather than a meaningful disparity. Collapsing these ambiguous categories prevents over-interpreting noisy or incomplete data.
+
+Search + Frisk Rates (SQL)
+
+```{sql connection=con_traffic, output.var="fl_search"}
 SELECT
-  subject_race AS race,
-  COUNT(*)     AS total_stops,
-  SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) AS num_searches,
-  1.0 * SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) / COUNT(*) AS search_rate
+CASE
+WHEN subject_race IS NULL OR subject_race IN ('other', 'unknown', '') THEN 'unknown/other'
+ELSE subject_race
+END AS race,
+COUNT(*) AS total_stops,
+SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) AS num_searches,
+SUM(CASE WHEN frisk_performed = 1 THEN 1 ELSE 0 END) AS num_frisk,
+1.0 * SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) / COUNT(*) AS search_rate,
+1.0 * SUM(CASE WHEN frisk_performed = 1 THEN 1 ELSE 0 END) / COUNT(*) AS frisk_rate
 FROM fl_statewide_2020_04_01
 GROUP BY race;
 ```
 
-Hit Rates
-```{sql connection=}
-SELECT
-  subject_race AS race,
-  SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END) AS num_searches,
-  SUM(CASE WHEN search_conducted = 1 AND contraband_found = 1 THEN 1 ELSE 0 END) AS num_hits,
-  1.0 *
-    SUM(CASE WHEN search_conducted = 1 AND contraband_found = 1 THEN 1 ELSE 0 END)
-      / NULLIF(SUM(CASE WHEN search_conducted = 1 THEN 1 ELSE 0 END), 0)
-      AS hit_rate
-FROM fl_statewide_2020_04_01
-GROUP BY race;
-```
+*Visualization: Search & Frisk Rates*
 
-*Plot orssbsbsbhbsihbsihbs Table: Search Rate vs Hit Rate*
+```{r}
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(tidyr)
+
+fl_search_long <- fl_search |>
+  select(race, search_rate, frisk_rate) |>
+  mutate(race = factor(race)) |>
+  pivot_longer(
+    cols = c(search_rate, frisk_rate),
+    names_to = "metric",
+    values_to = "rate"
+  ) |>
+  mutate(
+    metric = recode(
+      metric,
+      "search_rate" = "Search rate",
+      "frisk_rate"  = "Frisk rate"
+    )
+  )
+
+ggplot(fl_search_long,
+       aes(x = race, y = rate, fill = race)) +
+  geom_col() +
+  facet_wrap(~ metric, ncol = 2, scales = "free_x") +
+  coord_flip() +
+  scale_y_continuous(labels = percent_format(accuracy = 0.01)) +
+  labs(
+    title = "Search and Frisk Rates by Race in Florida",
+    x = "Race",
+    y = "Share of Stops Involving a Search or Frisk"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(size = 12, face = "bold"),
+    panel.spacing.x = unit(3, "lines")
+  )
+```
 
 
 
@@ -158,8 +224,6 @@ GROUP BY race;
 
 
 ***Conclusion***
-
-
 
 
 
