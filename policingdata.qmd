@@ -87,7 +87,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 
 The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all of the years, the majority of stops in this dataset involved individuals classified as white, with their share gradually declining from roughly 78% in 2010 to around 70% by 2018. Other groups make up much smaller proportions of the dataset, though their relative shares show slight increases over time. For example, stops recorded as Black rise from about 10% to approximately 15%, and Hispanic stops increase from roughly 6% to about 9% by 2018.
 
-It is important to emphasize that these percentages describe the distribution of stops within the SOPP dataset, not the underlying driving population or the general population of New York State. Without denominators (such as the racial composition of licensed drivers or traffic volume data) we cannot draw conclusions about disparities or exposure to police stops. The figure should therefore be interpreted strictly as a summary of how the stop records themselves are distributed across racial categories over time, rather than as evidence of the causes or consequences of those patterns.
+For context (not as a formal denominator), recent American Community Survey estimates for New York State, as summarized by the U.S. Census Bureau via CensusReporter that about 53% of residents identify as white, 13% as Black, 9% as Asian, and 20% as Hispanic. However, these population figures and the stop shares in the SOPP dataset are not directly comparable as they refer to different time windows, different populations (residents vs. drivers), and do not account for exposure to traffic enforcement. A more robust analysis would compare demographic data with distinct year-by-year changes (which would be difficult to obtain, given that official Census Bureau collects data every 10 years). Without appropriate denominators (such as the racial composition of licensed drivers or traffic volume data), we cannot draw conclusions about disparities or exposure to police stops. The figure should therefore be interpreted strictly as a summary of how the stop records themselves are distributed across racial categories over time, rather than as evidence of the causes or consequences of those patterns.
 
 ### Most Common Types of Traffic Stops: Long Beach and San Bernardino, California
 
@@ -228,14 +228,12 @@ Ambiguous categories such as “NA,” “unknown,” and “other” were colla
 
 In summary, this project used three different slices of the SOPP database to describe how traffic stop data is structured, rather than attempting to prove causal links in policing. In New York, the data shows that the majority of stops involve white drivers, though that share is declining over time while the proportion of Black and Hispanic drivers has seen a modest rise. For Long Beach and San Bernardino, the overwhelming majority of stops are categorized as vehicular. Since pedestrian or ambiguous stops are rare, this suggests the dataset focuses heavily on driver-officer interactions.
 
-The Florida analysis looked at post-stop outcomes, finding that while searches and frisks are rare events overall, recorded rates are highest for Black drivers. Throughout the analysis, I treated ambiguous labels like “NA” or "unknown" as likely data noise rather than distinct groups. Ultimately, these findings clarify what the SOPP data can tell us about how agencies record stops, while emphasizing the need to understand reporting differences and data limits before making broader generalizations.
+The Florida analysis looked at post-stop outcomes, finding that while searches and frisks are rare events overall, recorded rates are highest for Black drivers. Throughout the analysis, I treated ambiguous labels like “NA” or "unknown" as likely data noise rather than distinct groups. Ultimately, these findings clarify what the SOPP data can tell us about how agencies record stops, while emphasizing the need to understand reporting differences and data limits before making broader generalizations. Further analysis would require denominators such as exposure or official (U.S. Census Bureau) population estimates to contextualize these patterns.
 
 **Sources**
 
 Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: <https://openpolicing.stanford.edu>. Pierson et al. (2020).
 
-New York City Demographic Data. U.S. Census Bureau. New York, New York – Profile (Profile ID 16000US3651000). Demographics can be found at: <https://censusreporter.org/profiles/16000US3651000-new-york-ny/>
+New York State Demographic Data. U.S. Census Bureau. New York – State Profile (Profile ID 04000US36). Demographics available at: <https://censusreporter.org/profiles/04000US36-new-york/>
 
 (Note: CensusReporter provides a visualization layer, but all values originate from the U.S. Census Bureau.)
-
-***References***
