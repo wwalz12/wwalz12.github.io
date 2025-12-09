@@ -12,6 +12,9 @@ execute:
   message: false
 ---
 
+
+
+
 Using SQL and R, this project explores how traffic-stop data is structured across three jurisdictions in the Stanford Open Policing Project (SOPP). The objective is purely descriptive: to summarize what the dataset records rather than inferring motivations or causal mechanisms behind policing practices. Each section focuses on a specific layer of the data.
 
 I begin by examining how the racial composition of recorded stops in New York State changes over time, normalizing the data as percentages to allow for consistent comparison across years. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types and how those reporting conventions shape the dataset's structure. Finally, I analyze search and frisk rates in Florida, looking at how they differ across racial categories while accounting for ambiguous or missing values.
@@ -25,6 +28,9 @@ To begin the analysis, I examine how the racial composition of recorded traffic 
 The SQL query below groups stops by race and year from 2010-2018 and counts the number of stops in each category. Because the total number of stops varies much across years, I convert these counts into percentages so that each group’s share of all stops can be compared consistently over time.
 
 It is important to note that these percentages reflect the distribution within the stop dataset itself, not the demographic composition of New York State’s driving population, nor the population as a whole. Therefore, the results show how the dataset is structured rather than making any statement about disparities or policing practices.
+
+
+
 
 ```{r}
 library(DBI)
@@ -51,7 +57,13 @@ GROUP BY race, year
 HAVING year BETWEEN 2010 AND 2018;
 ```
 
+
+
+
 *Figure 1. Traffic Stops in New York City by Race and Year as %*
+
+
+
 
 ```{r}
 library(ggplot2)
@@ -83,6 +95,9 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
   theme_minimal(base_size = 14)
 ```
 
+
+
+
 *What does this mean?*
 
 The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all of the years, the majority of stops in this dataset involved individuals classified as white, with their share gradually declining from roughly 78% in 2010 to around 70% by 2018. Other groups make up much smaller proportions of the dataset, though their relative shares show slight increases over time. For example, stops recorded as Black rise from about 10% to approximately 15%, and Hispanic stops increase from roughly 6% to about 9% by 2018.
@@ -92,6 +107,9 @@ It is important to emphasize that these percentages describe the distribution of
 ### Most Common Types of Traffic Stops: Long Beach and San Bernardino, California
 
 For the second part of the analysis, I compare how different agencies categorize traffic stops. Both Long Beach and San Bernardino report stop types, but neither provides detailed violation codes of what each specifically means. Instead, each uses broad categories such as vehicular or pedestrian, or other (bikes, scooters, etc.). The following SQL queries count how many times each stop type appears in each agency’s data.
+
+
+
 
 ```{sql, connection=con_traffic, output.var="lb_types"}
 SELECT
@@ -111,7 +129,13 @@ FROM ca_san_bernardino_2020_04_01
 GROUP BY stop_type;
 ```
 
+
+
+
 *Visualization: Comparing Stop Type Distributions Across Two Agencies*
+
+
+
 
 ```{r}
 library(ggplot2)
@@ -142,6 +166,9 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
   theme_minimal(base_size = 14)
 ```
 
+
+
+
 *What does this mean?*
 
 The two agencies report broadly similar structures in their stop type distributions: both record overwhelmingly more vehicular stops than any other category. This is consistent with the fact that most police–civilian interactions captured in traffic stop databases involve drivers rather than pedestrians. However, Long Beach reports a noticeably larger number of stops classified as pedestrian compared with San Bernardino. This does not necessarily imply differences in enforcement intensity. Rather, it may reflect differences in population density, pedestrian activity, reporting conventions, or simply how each agency defines stop-type categories.
@@ -158,6 +185,9 @@ Before computing rates, I combined ambiguous racial categories such as NA, "unkn
 
 *Search + Frisk Rates (SQL)*
 
+
+
+
 ```{sql connection=con_traffic, output.var="fl_search"}
 SELECT
 CASE
@@ -173,7 +203,13 @@ FROM fl_statewide_2020_04_01
 GROUP BY race;
 ```
 
+
+
+
 *Visualization: Search & Frisk Rates*
+
+
+
 
 ```{r}
 library(dplyr)
@@ -216,6 +252,9 @@ ggplot(fl_search_long,
   )
 ```
 
+
+
+
 *What does this mean?*
 
 In this Florida dataset, searches happen more often than frisks, though both are rare compared to the total number of stops. Frisk rates are particularly low (mostly under 0.01%), which is why the axis sits close to zero despite some variation across groups.
@@ -239,3 +278,4 @@ New York City Demographic Data. U.S. Census Bureau. New York, New York – Profi
 (Note: CensusReporter provides a visualization layer, but all values originate from the U.S. Census Bureau.)
 
 ***References***
+
