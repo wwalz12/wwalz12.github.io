@@ -10,7 +10,7 @@ website:
         text: Home
       - text: Data Visualizations
         menu:
-          - href: dataviz.html
+          - href: dataviz.qmd
             text: Artist Births
           - href: chocolate.qmd
             text: Chocolate

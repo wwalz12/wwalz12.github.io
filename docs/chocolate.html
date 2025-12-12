@@ -146,6 +146,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="./text-analysis.html">
  <span class="dropdown-text">Text Analysis</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./project3.html">
+ <span class="dropdown-text">Life Expectancy Comparison</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./AmazonBias.html">
+ <span class="dropdown-text">Amazon Biased Robot</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./policingdata.html">
+ <span class="dropdown-text">Analyzing US Policing Data</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -202,6 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This analysis uses the TidyTuesday chocolate ratings dataset which contains reviews many different chocolate bars. I focus on the countries of cocoa bean origin to see which regions appear most often in the data. The plot below shows the ten most common bean origins.</p>
+<p>Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -242,13 +255,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="chocolate_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="chocolate_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" alt="A horizontal bar chart ranking the top 10 countries of cocoa bean origin. The bars represent the number of reviews, with the most popular countries of origin at the top, showing which regions appear most frequently in the dataset." width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The TidyTuesday data can be found at: <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18" class="uri">https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18</a></p>
-<p>This data comes from Flavors of Cacao by way of Georgios and Kelsey. (original link): <a href="https://flavorsofcacao.com/chocolate_database.html" class="uri">https://flavorsofcacao.com/chocolate_database.html</a></p>
+<p><strong>Data Sources:</strong></p>
+<ul>
+<li>The TidyTuesday data can be found at: <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18">TidyTuesday 2022-01-18</a></li>
+<li>Original data source: <a href="https://flavorsofcacao.com/chocolate_database.html">Flavors of Cacao Chocolate Database</a> (by way of Georgios and Kelsey)</li>
+</ul>
 
 
 

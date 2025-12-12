@@ -14,7 +14,9 @@ execute:
 
 # Overview
 
-I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles.
+I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles. I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles.
+
+Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
 
 ```{r}
 library(tidyverse)
@@ -47,6 +49,8 @@ by_author
 
 ```
 
+To measure the true length of the titles, I performed data cleaning to remove standard formatting. This involved stripping out the "FEDERALIST No." prefix with its Roman numerals, removing parenthetical text (usually used for citations), and deleting all punctuation. This ensures the character count reflects the author's actual descriptive words rather than the document structure.
+
 This table summarizes the average cleaned title length (in characters) by author. Madison’s titles are longest on average, while Hamilton and Jay tend to use slightly shorter titles. Madison had 29 papers, Hamilton 51, and Jay 5.
 
 ```{r}
@@ -68,6 +72,8 @@ titles_starting_with_the
 Here I found titles that began with "The" using str_detect(\*). The positive lookahead (?=\\b) made sure that the "The" was matched as a whole word at the start.
 
 ```{r}
+#| fig-alt: "A horizontal bar chart showing average title length by author. Madison has the longest titles (around 60 characters), followed by Hamilton (around 45), and Jay is the shortest (around 30)."
+
 ggplot(by_author, aes(x = author, y = mean_chars)) + 
   geom_col(fill = "steelblue") +
   coord_flip() +
@@ -83,6 +89,8 @@ ggplot(by_author, aes(x = author, y = mean_chars)) +
 This chart visualizes the differences in average title length across authors, and puts into perspective the table from by_author. Madison shows the highest mean character count, suggesting that he may have had a preference for longer or more descriptive titles. Jay has the lowest mean count, with Hamilton in the middle of the two.
 
 ```{r}
+#| fig-alt: "A bar chart displaying the percentage of titles starting with the word 'The'. Hamilton and Jay have the highest percentages (both near 80%), while Madison is slightly lower (around 70%)."
+
 ggplot(titles_starting_with_the, aes(x = author, y = avg_use_the)) +
   geom_col(fill = "darkgreen", width = 0.75) +
   coord_cartesian(ylim = c(0, 100)) +
@@ -96,6 +104,6 @@ ggplot(titles_starting_with_the, aes(x = author, y = avg_use_the)) +
 
 This plot shows the share of each author’s titles that start with "The." Differences are small, particularly between Hamilton and Jay (with Hamilton having the highest by a very tiny margin), but the pattern displays variation in how authors write their titles.
 
-Data: Nicholas J. Horton, FederalistPapers dataset. CSV used: title_author.csv.
+Data: [Project Gutenberg](https://www.gutenberg.org/files/1404/1404-h/1404-h.htm)
 
-Source: <https://github.com/nicholasjhorton/FederalistPapers>
+Source: [Nicholas J. Horton, FederalistPapers](https://github.com/nicholasjhorton/FederalistPapers)

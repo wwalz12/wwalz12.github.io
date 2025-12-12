@@ -12,6 +12,9 @@ execute:
   message: false
 ---
 
+
+
+
 Using SQL and R, this project explores how traffic stop data is structured across three U.S. agencies in the Stanford Open Policing Project (SOPP) database (Pierson et al., 2020). My objective is descriptive: I summarize what the dataset records rather than inferring motivations or making causal claims behind the policing practices.
 
 I begin by examining how the racial composition of recorded stops in New York State changes over time. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types. Finally, I analyze search and frisk rates in Florida to see how they differ across racial categories while accounting for ambiguous or missing values.
@@ -19,6 +22,9 @@ I begin by examining how the racial composition of recorded stops in New York St
 ### Racial Distribution of Traffic Stops Over Time: New York State
 
 To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. The SQL query below groups stops by race and year and counts the number of stops in each category. Because the total number of enforcement actions varies across years, I convert these counts into percentages in R to allow for consistent comparison.
+
+
+
 
 ```{r}
 library(DBI)
@@ -46,7 +52,13 @@ GROUP BY race, year
 HAVING year BETWEEN 2010 AND 2018;
 ```
 
+
+
+
 **Visualization: Trends in Recorded Stops**
+
+
+
 
 ```{r}
 #| fig-alt: "A line chart showing the percentage of traffic stops by race in New York State from 2010 to 2018. The line for White drivers is the highest, trending downward from roughly 78% to 70%. The lines for Black and Hispanic drivers show slight upward trends, rising from approximately 10% and 6% respectively to roughly 15% and 9%."
@@ -80,6 +92,9 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
   theme_minimal(base_size = 14)
 ```
 
+
+
+
 **Trends in Racial Comparison**
 
 The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all observed years, the majority of stops in this dataset involved individuals classified as white, although that share gradually declined from roughly 78% in 2010 to around 70% by 2018. Conversely, stops involving Black and Hispanic drivers show slight increases over the same period; Black stops rose from about 10% to approximately 15%, and Hispanic stops increased from roughly 6% to about 9%.
@@ -89,6 +104,9 @@ These percentages reflect the distribution within the stop dataset itself, not t
 ### Comparing Stop Types: Long Beach vs. San Bernardino
 
 For the second part of the analysis, I compare how different agencies categorize traffic stops. Both Long Beach and San Bernardino report stop types, but neither provides detailed violation codes. To compare them efficiently, I use a SQL UNION to combine the datasets directly in the query. This approach allows me to standardize the city labels before bringing the data into R.
+
+
+
 
 ```{sql, connection=con_traffic, output.var="ca_stops_combined"}
 (SELECT
@@ -108,7 +126,13 @@ FROM ca_san_bernardino_2020_04_01
 GROUP BY stop_type);
 ```
 
+
+
+
 *Visualization: Comparing Stop Type Distributions Across Two Agencies*
+
+
+
 
 ```{r}
 #| fig-alt: "Two bar charts comparing stop types in Long Beach and San Bernardino. In both cities, 'vehicular' stops are the overwhelming majority, represented by a long bar at the top. Long Beach displays a visible, though smaller, bar for 'pedestrian' stops, whereas San Bernardino reports almost zero pedestrian stops."
@@ -141,6 +165,9 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
   theme_minimal(base_size = 14)
 ```
 
+
+
+
 **Reporting Conventions by Agency**
 
 The two agencies report broadly similar structures in their stop type distributions: both record overwhelmingly more vehicular stops than any other category. This consistency aligns with the expectation that traffic stop databases primarily capture driver interactions. However, Long Beach reports a noticeably larger number of stops classified as "pedestrian" compared with San Bernardino.
@@ -150,6 +177,9 @@ This difference does not necessarily imply different enforcement intensity. Rath
 ### Search and Frisk Rates by Race: Florida
 
 In the final section, I analyze how often police searches and frisks occur during traffic stops in Florida. The dataset includes flags for search_conducted and frisk_performed. Before computing rates, I categorize ambiguous racial categories (NA, "unknown", "other") into a single group to prevent misinterpreting missing data as a substantive demographic finding.
+
+
+
 
 ```{sql connection=con_traffic, output.var="fl_search"}
 SELECT
@@ -166,7 +196,13 @@ FROM fl_statewide_2020_04_01
 GROUP BY race;
 ```
 
+
+
+
 **Visualization: Disparities in Post-Stop Outcomes**
+
+
+
 
 ```{r}
 #| fig-alt: "A faceted bar chart showing search and frisk rates by race in Florida. The top bar in both panels corresponds to Black drivers, showing the highest rates for both searches and frisks. Hispanic and White drivers show lower rates. The frisk rates are significantly lower overall (close to 0%) compared to search rates."
@@ -212,6 +248,9 @@ ggplot(fl_search_long,
   )
 ```
 
+
+
+
 **Analysis of Search and Frisk Rates**
 
 In the Florida dataset, searches occur more frequently than frisks, though both events are rare relative to the total number of stops. Frisk rates are particularly low, generally falling below 0.5% for all groups.
@@ -228,12 +267,19 @@ This project utilized three distinct subsets of the SOPP database (Pierson et al
 
 These findings underscore the importance of understanding data definitions and reporting conventions before drawing broad conclusions about policing from administrative data.
 
+
+
+
 ```{r}
 dbDisconnect(con_traffic)
 ```
+
+
+
 
 **References**
 
 Pierson, E., Simoiu, C., Overgoor, J., Corbett-Davies, S., Jenson, D., Shoemaker, A., Ramachandran, V., et al. (2020). "A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States." *Nature Human Behaviour*, 1–10.
 
 Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: <https://openpolicing.stanford.edu>. Pierson et al. (2020).
+

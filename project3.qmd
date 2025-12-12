@@ -14,11 +14,17 @@ execute:
 
 # Overview
 
-I test whether countries in Asia and Africa differ in their average life expectancy using data from the Gapminder dataset. I focus on the year 2007 so that each country is represented once (and because that's the most recent in this dataset). My goal is to see if the observed difference between the two continents could have happened by random chance, or if it reflects a real difference in population health.
+I test whether countries in Asia and Africa differ in their average life expectancy using data from the Gapminder dataset. I focus on the year 2007.
 
-**Null hypothesis (H₀):** There is no difference in mean life expectancy between Asia and Africa in 2007.
+**Context of Inference:** While this dataset contains all countries recorded in Gapminder for 2007, I treat these data as a sample of the underlying mechanisms that generate health outcomes. The goal is to determine if the "Continent" label provides a meaningful distinction in life expectancy, or if the observed difference could have arisen purely by the random chance of how countries are labeled.
 
-**Alternative hypothesis (Hₐ):** The mean life expectancy differs between Asia and Africa in 2007.
+**Accessibility Note:** All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
+
+**Hypotheses**
+
+**Null hypothesis (H₀):** There is no difference in mean life expectancy between Asia and Africa in 2007 (the labels are exchangeable).
+
+**Alternative hypothesis (Hₐ):** The mean life expectancy differs between Asia and Africa in 2007 (two-sided).
 
 ```{r}
 library(tidyverse)
@@ -36,6 +42,8 @@ In the code above, I load the necessary packages and filter the Gapminder datase
 # Visualize this relationship
 
 ```{r}
+#| fig-alt: "Side-by-side boxplots showing the distribution of life expectancy in Africa versus Asia. The box for Asia is positioned higher on the y-axis (indicating longer life expectancy) and has a wider spread than the box for Africa, which is lower and more compressed."
+
 ggplot(keep_2007, aes(x = continent, y = lifeExp, fill = continent)) +
   geom_boxplot(alpha=0.67) +
   labs(
@@ -50,7 +58,7 @@ Above is the original data, in boxplots that show life expectancy distributions 
 
 # Observed Difference (Asia - Africa)
 
-Why? In a permutation test, you calculate the difference in means to create a null distribution that represents what you would expect if there was not an actual difference in the groups.
+**Why?** In a permutation test, you calculate the difference in means to create a null distribution that represents what you would expect if there was not an actual difference in the groups.
 
 ```{r}
 # first, summary by continent
@@ -80,11 +88,13 @@ observed_diffs <- keep_2007 |>
 observed_diffs
 ```
 
-Here, I calculate the observed difference in both mean and median life expectancy between Asia and Africa. This step gives me the actual statistic I'm testing against. In this case, the mean difference is 15.92 years and median difference is 19.47 years. These values prove that, on average, people in Asia live substantially longer than those in Africa. In a permutation test, these observed differences act as benchmarks to see how extreme they are relative to differences generated under random shuffling (the null hypothesis).
+Here, I calculate the observed difference in both mean and median life expectancy between Asia and Africa. This step gives me the actual statistic I'm testing against. In this case, the mean difference is 15.92 years and median difference is 19.47 years.
+
+These values *indicate* that, in this specific dataset, people in Asia lived substantially longer than those in Africa. In a permutation test, these observed differences act as benchmarks to see how extreme they are relative to differences generated under random shuffling (the null hypothesis).
 
 # Null sampling distribution
 
-What does this do? It creates the null sampling distribution, whcih shows what differences I'd expect if continent made no real difference tolife expectancy. The function **shuffle_sim** randomly shuffles the continent labels, recalculates the mean and median (lifeExp) for the shuffled groups, and returns the differences. I repeated this 3,000 times with map to simulate what random differences might look like if there were not a relationship between continent and life expectancy.
+**What does this do?** What does this do? It creates the null sampling distribution, which shows what differences I'd expect if continent made no real difference to life expectancy. The function **shuffle_sim** randomly shuffles the continent labels, recalculates the mean and median (lifeExp) for the shuffled groups, and returns the differences. I repeated this 3,000 times with **map** to simulate what random differences might look like if there were not a relationship between continent and life expectancy.
 
 ```{r}
 #shuffle_sim
@@ -116,6 +126,8 @@ permut_stats |> head()
 # Visualize! (observed ave diff)
 
 ```{r}
+#| fig-alt: "A histogram of the null distribution for mean differences. The distribution is centered at 0. A vertical red line representing the observed difference of roughly 16 years is located far to the right, completely separated from the simulated null distribution values."
+
 #observed ave diff
 permut_stats |>
   ggplot(aes(x = mean_diff_sim)) +
@@ -128,11 +140,13 @@ permut_stats |>
                ) + theme_minimal()
 ```
 
-The histogram above shows the null distribution of mean differences generated from the permutations. Each bar represents one possible difference that could occur by random chance if continent didn’t matter. The red line shows the observed mean difference from the real data (15.9 years). Because the red line is far to the right of almost all simulated values, the observed difference is extremely unlikely to be due to chance which provides strong evidence that the continents differ in mean life expectancy (Reject null hypothesis that (lifeExp) in Asia and Africa are not the same).
+The histogram above shows the null distribution of mean differences generated from the permutations. Each bar represents one possible difference that could occur by random chance if continent didn’t matter. The red line shows the observed mean difference from the real data (15.9 years). Because the red line is far to the right of almost all simulated values, the observed difference is extremely unlikely to be due to chance which provides strong evidence that the continents differ in mean life expectancy (Reject null hypothesis that lifeExp in Asia and Africa are not the same).
 
 # Visualize! (observed med diff)
 
 ```{r}
+#| fig-alt: "A histogram of the null distribution for median differences. Similar to the mean plot, the distribution is centered near 0. The red line representing the observed median difference of 19.5 years is extremely far to the right, indicating it is an outlier under the null hypothesis."
+
 #observed med diff
 permut_stats |>
   ggplot(aes(x = median_diff_sim)) +
@@ -159,12 +173,12 @@ p_results <- permut_stats |>
 p_results
 ```
 
-The p-value shows how likely it is to see a difference this large just by chance. A small p-value means the result is unlikely under the null hypothesis, suggesting a real difference between Asia and Africa.
+The p-value shows how likely it is to see a difference this large (or larger) just by chance. Because my alternative hypothesis was two-sided ("differs"), I calculated the p-value using the absolute value to look at both extremes. A small p-value means the result is unlikely under the null hypothesis, suggesting a real difference between Asia and Africa.
 
 # Conclusion
 
-In this project, I used a permutation simulation to test whether Asia and Africa differ in mean and median life expectancy. After 3,000 random label shuffles, the observed differences were much larger than any values from the null distribution. The p-values were 0, suggesting that the observed gap in life expectancy is absolutely not due to chance. This supports the conclusion that people in Asia generally live longer than those in Africa.
+In this project, I used a permutation simulation to test whether Asia and Africa differ in mean and median life expectancy. After 3,000 random label shuffles, the observed differences were much larger than any values from the null distribution. The p-values were 0, suggesting that the observed gap in life expectancy is statistically significant. This supports the conclusion that the mechanism generating life expectancy outcomes in Asia differs from that in Africa.
 
 # Data Sources and References:
 
-Gapminder Foundation. (n.d.). Gapminder data. Gapminder Foundation. Retrieved from [Gapminder Foundation](https://www.gapminder.org/data/)
+**Data Source:** Jennifer Bryan (2017). *gapminder: Data from Gapminder.* R package version 0.3.0. <https://CRAN.R-project.org/package=gapminder>

@@ -1,5 +1,5 @@
 ---
-title: "Project 4: Amazon Tried to Build a Biased Robot"
+title: "Project 4: The Amazon Recruiting Algorithm"
 author: William Walz
 date: November 12, 2025
 format: 
@@ -11,36 +11,46 @@ execute:
   message: false
 ---
 
-### Amazon Tried to Build a Biased Robot
+## The Scenario: Automated Hiring at Amazon
 
-In 2014, Amazon decided it wanted to find the "holy grail" of hiring, as one person told Reuters. They wanted to build an AI that could simply look at 100 resumes and spit out the top five people to hire. The data science part of this was a machine learning model. The ethical issue was that, by 2015, they realized their new system had a bias against women.
+In 2014, Amazon attempted to automate the talent acquisition process by creating a machine learning algorithm to score job applicants (Dastin, 2018). The company aimed to increase efficiency by developing a tool that could evaluate 100 resumes and identify the top five candidates for recruitment. However, the engineering team eventually disbanded the project in 2015 because the model displayed a systematic bias against women (Dastin, 2018). The tool penalized resumes containing the word "women's" (e.g., "women's chess club captain") and downgraded graduates from two all-women's colleges (Dastin, 2018).
 
-The problem was the data. According to Reuters, Amazon's engineers trained the model using 10 years' worth of resumes that had been submitted to the company, and most of these resumes came from men. The ACLU article points out that this just reflects how the tech industry is already male-dominated. The AI basically taught itself that male candidates were the ideal. The Reuters report also explained that it learned to actually penalize resumes that had the word "women's" in them (like "women's chess club captain") and even downgraded graduates from two all-women's colleges.
+## Recognizing and Mitigating Bias
 
-### My Ethical Takeaways
+*Addressing the Data Value: "Recognize and mitigate bias in ourselves and in the data we use."*
 
-**1. An Obvious Bias**
+The Amazon recruiting tool failed to mitigate bias because the algorithm codified existing gender disparities found in the tech industry. Dastin (2018) reports that the model taught itself that male candidates were preferable because the training data favored terminology used more frequently by men, such as "executed" or "captured." Conversely, the system penalized resumes containing the word "women's." Goodman (2018) argues that such algorithms do not remove human bias but instead "launder" discrimination through software, giving the exclusion of women a veneer of objectivity. By automating the preference for male candidates, Amazon's tool amplified rather than mitigated the biases present in the hiring process.
 
-The biggest and most obvious problem here is bias. The project prompt asks us to "recognize and mitigate bias," and this is a total failure on that front. As the ACLU article argues, the algorithm wasn't getting rid of human bias, it was just "laundering it through software." The AI also learned, as reported by Reuters, that certain verbs men tend to use on their resumes, like "executed" and "captured," were good, while things associated with women were bad. It just copied the existing bias and made it automatic.
+## Representativeness of the Sample
 
-**2. No Representation**
+*Addressing the Question: "Who was measured? Are those individuals representative of the people to whom we’d like to generalize?"*
 
-This leads right to the next problem, representativeness. The prompt asks, "Who was measured? Are those individuals representative...?" The answer here is a hard "no." The training data wasn't representative of all good candidates; as Reuters described, it was only representative of Amazon's past, mostly male workforce. As the ACLU points out in their article, if you just ask software to find more people who look like your current staff, "reproducing the demographics of the existing workforce is virtually guaranteed." The algorithm didn't have a good enough picture of what a successful female engineer looked like, so it just decided they were bad.
+The data collection process relied on 10 years of resumes previously submitted to Amazon (Dastin, 2018). Because the technology sector is historically male dominated, the majority of the training data came from men. Consequently, the individuals measured were not representative of the ideal applicant pool, but rather representative of Amazon's past hiring preferences. Goodman (2018) notes that asking software to locate candidates who resemble a current workforce guarantees the reproduction of existing demographics. The lack of female representation in the training data caused the algorithm to treat female gender markers as negative variables, resulting in a failure to generalize fairly across all potential applicants.
 
-**3. Unintended Consequence**
+## Unintended Consequences and Open Discussion
 
-This whole project is a perfect example of "unintended consequences." Amazon didn't try to build a sexist AI; according to Reuters, they were just trying to be efficient. The bad consequence was the systematic discrimination. To their credit, Amazon's team did notice the problem. Reuters mentions they tried to edit the program to make it neutral to specific terms (like "women's"), but they realized there was "no guarantee" the AI wouldn't just find other, sneakier ways to be discriminatory. This is why they ended up scrapping the whole project, which I guess counts as "open discussion of... unintended consequences."
+*Addressing the Data Value: "Respect and invite fair criticism while promoting the identification and open discussion of errors, risks, and unintended consequences of our work."*
 
-**4. Accountability**
+While Amazon intended to improve efficiency, the unintended consequence was the creation of a discriminatory sorting mechanism. The engineering team identified the risk that the tool would penalize gender-neutral resumes if the algorithm detected other correlations to gender (Dastin, 2018). However, Amazon failed to promote the "open discussion" of these errors. Dastin (2018) reveals that the company quietly disbanded the team and did not publicize the failure until Reuters investigated the matter years later. Rather than using the failure to inform the wider data science community about the risks of algorithmic hiring, Amazon attempted to keep the project's flaws secret, violating the principle of transparently discussing risks and consequences.
 
-Finally, accountability? The ACLU article brings up a scary point: if Amazon had actually used this tool, how would anyone know? An applicant who got rejected would have no idea it was because an algorithm downgraded her for going to an all-women's college. As the ACLU argues, it's "exceedingly difficult" to sue for discrimination in these cases because it's all hidden inside proprietary software. This lack of transparency means there's no real accountability for the people who are harmed.
+## Ethical Implications and Accountability
 
-### Why Does It Matter?
+*Addressing the Data Value: "Consider carefully the ethical implications of choices we make when using data."*
 
-In the end, this whole thing matters because it shows how data science can go really wrong. The intended beneficiary was Amazon, who was looking for profit and efficiency by automating hiring with their AI model. The group harmed was clearly women applying for technical jobs, who were unfairly penalized. This case is a perfect example of how data science can be used in a way that just reinforces existing power structures (in this case, male dominance in tech) instead of fixing them. It's a good lesson that just because something is "data-driven" doesn't mean it's fair.
+The ethical implications of using automated tools for hiring involve a lack of accountability and transparency for the applicants. Goodman (2018) highlights that if Amazon had deployed the tool, rejected applicants would have remained unaware that an algorithm had downgraded their resumes based on gender. Proving discrimination in such cases is "exceedingly difficult" because the decision-making logic is hidden inside proprietary software (Goodman, 2018). The choice to use this model shifts power away from the individual, who cannot provide informed consent or challenge the decision and concentrates power within the corporation. This dynamic creates a scenario where ethical violations can occur without detection or recourse.
 
-### Sources
+## Summary: Impact
 
-Dastin, J. (2018, October 10). [*Amazon scraps secret AI recruiting tool that showed bias against women*](https://www.reuters.com/article/us-amazon-com-jobs-automation-insight-idUSKCN1MK08G)*.* Reuters.
+The Amazon recruiting case illustrates how data science can reinforce existing power structures when efficiency is prioritized over equality. 
 
-Goodman, R. (2018, October 16). [*Why Amazon’s Automated Hiring Tool Discriminated Against Women*](https://www.aclu.org/news/womens-rights/why-amazons-automated-hiring-tool-discriminated-against)*.* ACLU News & Commentary.
+**Who benefits?** Amazon stood to benefit financially through the increased efficiency of their hiring pipeline and the reduction of human labor costs. 
+
+**Who is harmed?** Female applicants were the primary group neglected and harmed. The algorithm actively penalized their credentials based on historical patterns of exclusion in the tech industry. 
+
+**The Power Dynamic:** The ethical violations occurred in the interest of profit and efficiency. By relying on historical data without correcting for historical injustice, the project utilized data science to maintain the status quo of male dominance in the technology sector rather than challenging it.
+
+## References
+
+Dastin, J. (2018, October 10). *Amazon scraps secret AI recruiting tool that showed bias against women*. Reuters. [https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G/](https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G/)
+
+Goodman, R. (2018, October 16). *Why Amazon’s Automated Hiring Tool Discriminated Against Women*. ACLU News & Commentary. [https://www.aclu.org/news/womens-rights/why-amazons-automated-hiring-tool-discriminated-against-women](https://www.aclu.org/news/womens-rights/why-amazons-automated-hiring-tool-discriminated-against-women)

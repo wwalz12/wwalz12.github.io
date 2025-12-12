@@ -146,6 +146,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="./text-analysis.html">
  <span class="dropdown-text">Text Analysis</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./project3.html">
+ <span class="dropdown-text">Life Expectancy Comparison</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./AmazonBias.html">
+ <span class="dropdown-text">Amazon Biased Robot</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./policingdata.html">
+ <span class="dropdown-text">Analyzing US Policing Data</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -201,7 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This dataset contains information on artists, including their names, genders, birth years, and places of origin. Here, I created a visualization the top 5 artist birth years to find the years that produced the most artists. The bar chart at the bottom displays the five most common years of birth in the dataset.<br>
+<p>This dataset contains information on artists, including their names, genders, birth years, and places of origin. Here, I created a visualization of the top 5 artist birth years to find the years that produced the most artists. The bar chart at the bottom displays the five most common years of birth in the dataset.</p>
+<p>Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.<br>
 </p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -239,13 +252,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dataviz_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" alt="A vertical bar chart displaying the five most common birth years for artists in the dataset. The tallest bars indicate the specific years when the highest number of artists in this collection were born." width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The TidyTuesday data can be found at: <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-01-12" class="uri">https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-01-12</a></p>
-<p>This data comes from the Tate Art Museum (original GitHub link): <a href="https://github.com/tategallery/collection" class="uri">https://github.com/tategallery/collection</a></p>
+<p><strong>Data Sources:</strong></p>
+<ul>
+<li>The TidyTuesday data can be found at: <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-01-12">TidyTuesday 2021-01-12</a></li>
+<li>Original data source: <a href="https://github.com/tategallery/collection">Tate Art Museum Collection</a></li>
+</ul>
 
 
 

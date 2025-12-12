@@ -11,6 +11,8 @@ execute:
 
 This analysis uses the TidyTuesday chocolate ratings dataset which contains reviews many different chocolate bars. I focus on the countries of cocoa bean origin to see which regions appear most often in the data. The plot below shows the ten most common bean origins.
 
+Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
+
 ```{r}
 library(tidyverse)
 
@@ -25,6 +27,8 @@ top_bean_countries
 ```
 
 ```{r}
+#| fig-alt: "A horizontal bar chart ranking the top 10 countries of cocoa bean origin. The bars represent the number of reviews, with the most popular countries of origin at the top, showing which regions appear most frequently in the dataset."
+
 ggplot(top_bean_countries, aes(x = reorder(country_of_bean_origin, n), y = n)) +
   geom_col(fill = "chocolate4") +
   coord_flip() +
@@ -36,6 +40,7 @@ ggplot(top_bean_countries, aes(x = reorder(country_of_bean_origin, n), y = n)) +
   theme_minimal()
 ```
 
-The TidyTuesday data can be found at: <https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18>
+**Data Sources:**
 
-This data comes from Flavors of Cacao by way of Georgios and Kelsey. (original link): <https://flavorsofcacao.com/chocolate_database.html>
+-   The TidyTuesday data can be found at: [TidyTuesday 2022-01-18](https://github.com/rfordatascience/tidytuesday/tree/main/data/2022/2022-01-18)
+-   Original data source: [Flavors of Cacao Chocolate Database](https://flavorsofcacao.com/chocolate_database.html) (by way of Georgios and Kelsey)
