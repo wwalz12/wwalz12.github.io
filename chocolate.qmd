@@ -11,7 +11,7 @@ execute:
 
 This analysis uses the TidyTuesday chocolate ratings dataset which contains reviews many different chocolate bars. I focus on the countries of cocoa bean origin to see which regions appear most often in the data. The plot below shows the ten most common bean origins.
 
-Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
+**Accessibility Note:** All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
 
 ```{r}
 library(tidyverse)

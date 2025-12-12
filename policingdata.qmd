@@ -16,6 +16,8 @@ Using SQL and R, this project explores how traffic stop data is structured acros
 
 I begin by examining how the racial composition of recorded stops in New York State changes over time. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types. Finally, I analyze search and frisk rates in Florida to see how they differ across racial categories while accounting for ambiguous or missing values.
 
+**Accessibility Note:** All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
+
 ### Racial Distribution of Traffic Stops Over Time: New York State
 
 To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. The SQL query below groups stops by race and year and counts the number of stops in each category. Because the total number of enforcement actions varies across years, I convert these counts into percentages in R to allow for consistent comparison.

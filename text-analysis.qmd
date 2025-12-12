@@ -16,7 +16,7 @@ execute:
 
 I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles. I analyze the titles of the Federalist Papers to see if some authors used longer or shorter titles.
 
-Accessibility Note: All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
+**Accessibility Note:** All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.
 
 ```{r}
 library(tidyverse)
