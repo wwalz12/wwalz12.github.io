@@ -271,7 +271,7 @@ These findings underscore the importance of understanding data definitions and r
 
 
 ```{r}
-dbDisconnect(con_traffic)
+DBI::dbDisconnect(con_traffic)
 ```
 
 

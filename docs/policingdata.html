@@ -177,8 +177,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#racial-distribution-of-traffic-stops-over-time-new-york-state" id="toc-racial-distribution-of-traffic-stops-over-time-new-york-state" class="nav-link active" data-scroll-target="#racial-distribution-of-traffic-stops-over-time-new-york-state">Racial Distribution of Traffic Stops Over Time: New York State</a></li>
-  <li><a href="#most-common-types-of-traffic-stops-long-beach-and-san-bernardino-california" id="toc-most-common-types-of-traffic-stops-long-beach-and-san-bernardino-california" class="nav-link" data-scroll-target="#most-common-types-of-traffic-stops-long-beach-and-san-bernardino-california">Most Common Types of Traffic Stops: Long Beach and San Bernardino, California</a></li>
-  <li><a href="#search-rates-and-frisk-rates-by-race-florida" id="toc-search-rates-and-frisk-rates-by-race-florida" class="nav-link" data-scroll-target="#search-rates-and-frisk-rates-by-race-florida">Search Rates and Frisk Rates by Race: Florida</a></li>
+  <li><a href="#comparing-stop-types-long-beach-vs.-san-bernardino" id="toc-comparing-stop-types-long-beach-vs.-san-bernardino" class="nav-link" data-scroll-target="#comparing-stop-types-long-beach-vs.-san-bernardino">Comparing Stop Types: Long Beach vs.&nbsp;San Bernardino</a></li>
+  <li><a href="#search-and-frisk-rates-by-race-florida" id="toc-search-and-frisk-rates-by-race-florida" class="nav-link" data-scroll-target="#search-and-frisk-rates-by-race-florida">Search and Frisk Rates by Race: Florida</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -221,14 +222,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Using SQL and R, this project explores how traffic-stop data is structured across three jurisdictions in the Stanford Open Policing Project (SOPP). The objective is purely descriptive: to summarize what the dataset records rather than inferring motivations or causal mechanisms behind policing practices. Each section focuses on a specific layer of the data.</p>
-<p>I begin by examining how the racial composition of recorded stops in New York State changes over time, normalizing the data as percentages to allow for consistent comparison across years. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types and how those reporting conventions shape the dataset’s structure. Finally, I analyze search and frisk rates in Florida, looking at how they differ across racial categories while accounting for ambiguous or missing values.</p>
-<p>Collectively, these analyses illustrate how differently agencies record traffic stops, underscoring the importance of understanding data definitions and missingness before drawing broader conclusions.</p>
+<p>Using SQL and R, this project explores how traffic stop data is structured across three U.S. agencies in the Stanford Open Policing Project (SOPP) database (Pierson et al., 2020). My objective is descriptive: I summarize what the dataset records rather than inferring motivations or making causal claims behind the policing practices.</p>
+<p>I begin by examining how the racial composition of recorded stops in New York State changes over time. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types. Finally, I analyze search and frisk rates in Florida to see how they differ across racial categories while accounting for ambiguous or missing values.</p>
 <section id="racial-distribution-of-traffic-stops-over-time-new-york-state" class="level3">
 <h3 class="anchored" data-anchor-id="racial-distribution-of-traffic-stops-over-time-new-york-state">Racial Distribution of Traffic Stops Over Time: New York State</h3>
-<p>To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State has changed over time. The goal here is descriptive rather than causal. I summarize the data as it appears in the tables without making claims about why these patterns occur or what underlying mechanisms may explain them.</p>
-<p>The SQL query below groups stops by race and year from 2010-2018 and counts the number of stops in each category. Because the total number of stops varies much across years, I convert these counts into percentages so that each group’s share of all stops can be compared consistently over time.</p>
-<p>It is important to note that these percentages reflect the distribution within the stop dataset itself, not the demographic composition of New York State’s driving population, nor the population as a whole. Therefore, the results show how the dataset is structured rather than making any statement about disparities or policing practices.</p>
+<p>To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. The SQL query below groups stops by race and year and counts the number of stops in each category. Because the total number of enforcement actions varies across years, I convert these counts into percentages in R to allow for consistent comparison.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -236,13 +234,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RMariaDB)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>con_traffic <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  RMariaDB<span class="sc">::</span><span class="fu">MariaDB</span>(),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">"traffic"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">host =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_HOST"</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">user =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_USER"</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">password =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_PWD"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Connect to database</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>con_traffic <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  RMariaDB<span class="sc">::</span><span class="fu">MariaDB</span>(),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">"traffic"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">host =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_HOST"</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">user =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_USER"</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">password =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_PWD"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-output.var="ny_stops">
@@ -258,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="dt">year</span> <span class="kw">BETWEEN</span> <span class="dv">2010</span> <span class="kw">AND</span> <span class="dv">2018</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><em>Figure 1. Traffic Stops in New York City by Race and Year as %</em></p>
+<p><strong>Visualization: Trends in Recorded Stops</strong></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
@@ -274,14 +273,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_stops_year =</span> <span class="fu">sum</span>(n_stops),</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct =</span> n_stops <span class="sc">/</span> total_stops_year <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct =</span> n_stops <span class="sc">/</span> total_stops_year</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ny_stops_pct, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> pct, <span class="at">color =</span> race)) <span class="sc">+</span></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(<span class="at">scale =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percent of Traffic Stops in New York State by Race and Year"</span>,</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
@@ -293,169 +292,175 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="policingdata_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="policingdata_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" alt="A line chart showing the percentage of traffic stops by race in New York State from 2010 to 2018. The line for White drivers is the highest, trending downward from roughly 78% to 70%. The lines for Black and Hispanic drivers show slight upward trends, rising from approximately 10% and 6% respectively to roughly 15% and 9%." width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><em>What does this mean?</em></p>
-<p>The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all of the years, the majority of stops in this dataset involved individuals classified as white, with their share gradually declining from roughly 78% in 2010 to around 70% by 2018. Other groups make up much smaller proportions of the dataset, though their relative shares show slight increases over time. For example, stops recorded as Black rise from about 10% to approximately 15%, and Hispanic stops increase from roughly 6% to about 9% by 2018.</p>
-<p>It is important to emphasize that these percentages describe the distribution of stops within the SOPP dataset, not the underlying driving population or the general population of New York State. Without denominators (such as the racial composition of licensed drivers or traffic volume data) we cannot draw conclusions about disparities or exposure to police stops. The figure should therefore be interpreted strictly as a summary of how the stop records themselves are distributed across racial categories over time, rather than as evidence of the causes or consequences of those patterns.</p>
+<p><strong>Trends in Racial Comparison</strong></p>
+<p>The figure shows how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. Across all observed years, the majority of stops in this dataset involved individuals classified as white, although that share gradually declined from roughly 78% in 2010 to around 70% by 2018. Conversely, stops involving Black and Hispanic drivers show slight increases over the same period; Black stops rose from about 10% to approximately 15%, and Hispanic stops increased from roughly 6% to about 9%.</p>
+<p>These percentages reflect the distribution within the stop dataset itself, not the demographics of the total population or the driving population. Therefore, the trends describe how the administrative record has shifted, rather than proving a change in policing strategy or population behavior.</p>
 </section>
-<section id="most-common-types-of-traffic-stops-long-beach-and-san-bernardino-california" class="level3">
-<h3 class="anchored" data-anchor-id="most-common-types-of-traffic-stops-long-beach-and-san-bernardino-california">Most Common Types of Traffic Stops: Long Beach and San Bernardino, California</h3>
-<p>For the second part of the analysis, I compare how different agencies categorize traffic stops. Both Long Beach and San Bernardino report stop types, but neither provides detailed violation codes of what each specifically means. Instead, each uses broad categories such as vehicular or pedestrian, or other (bikes, scooters, etc.). The following SQL queries count how many times each stop type appears in each agency’s data.</p>
-<div class="cell" data-output.var="lb_types">
+<section id="comparing-stop-types-long-beach-vs.-san-bernardino" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-stop-types-long-beach-vs.-san-bernardino">Comparing Stop Types: Long Beach vs.&nbsp;San Bernardino</h3>
+<p>For the second part of the analysis, I compare how different agencies categorize traffic stops. Both Long Beach and San Bernardino report stop types, but neither provides detailed violation codes. To compare them efficiently, I use a SQL UNION to combine the datasets directly in the query. This approach allows me to standardize the city labels before bringing the data into R.</p>
+<div class="cell" data-output.var="ca_stops_combined">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="kw">AS</span> stop_type,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> type_count,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">'Long Beach'</span> <span class="kw">AS</span> city</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">type</span> <span class="kw">AS</span> stop_type,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> type_count,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Long Beach'</span> <span class="kw">AS</span> city</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_long_beach_2020_04_01</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> stop_type;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell" data-output.var="sb_types">
-<details class="code-fold">
-<summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="kw">AS</span> stop_type,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> type_count,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">'San Bernardino'</span> <span class="kw">AS</span> city</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_san_bernardino_2020_04_01</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> stop_type;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> stop_type)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>(<span class="kw">SELECT</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">type</span> <span class="kw">AS</span> stop_type,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> type_count,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">'San Bernardino'</span> <span class="kw">AS</span> city</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_san_bernardino_2020_04_01</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> stop_type);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><em>Visualization: Comparing Stop Type Distributions Across Two Agencies</em></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combination of Long Beach &amp; San Bernardino results</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>combined_types <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(lb_types, sb_types) <span class="sc">|&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">stop_type =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(stop_type) <span class="sc">|</span> stop_type <span class="sc">==</span> <span class="st">""</span>, <span class="st">"NA"</span>, stop_type)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">|&gt;</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stop_type =</span> <span class="fu">reorder</span>(stop_type, type_count)) <span class="sc">|&gt;</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_types, <span class="fu">aes</span>(<span class="at">x =</span> stop_type, <span class="at">y =</span> type_count)) <span class="sc">+</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#4C72B0"</span>) <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> city, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Stop Types Across Two California Agencies"</span>,</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Long Beach vs. San Bernardino"</span>,</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Stop Type"</span>,</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Stops"</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up NAs for visualization</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>combined_types <span class="ot">&lt;-</span> ca_stops_combined <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(bit64<span class="sc">::</span>is.integer64), as.integer)) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">stop_type =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(stop_type) <span class="sc">|</span> stop_type <span class="sc">==</span> <span class="st">""</span>, <span class="st">"NA/Unknown"</span>, stop_type)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stop_type =</span> <span class="fu">reorder</span>(stop_type, type_count)) <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_types, <span class="fu">aes</span>(<span class="at">x =</span> stop_type, <span class="at">y =</span> type_count)) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#4C72B0"</span>) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> city, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Stop Types Across Two California Agencies"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Long Beach vs. San Bernardino (SOPP Data)"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Stop Type"</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Stops"</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="policingdata_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="policingdata_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" alt="Two bar charts comparing stop types in Long Beach and San Bernardino. In both cities, 'vehicular' stops are the overwhelming majority, represented by a long bar at the top. Long Beach displays a visible, though smaller, bar for 'pedestrian' stops, whereas San Bernardino reports almost zero pedestrian stops." width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><em>What does this mean?</em></p>
-<p>The two agencies report broadly similar structures in their stop type distributions: both record overwhelmingly more vehicular stops than any other category. This is consistent with the fact that most police–civilian interactions captured in traffic stop databases involve drivers rather than pedestrians. However, Long Beach reports a noticeably larger number of stops classified as pedestrian compared with San Bernardino. This does not necessarily imply differences in enforcement intensity. Rather, it may reflect differences in population density, pedestrian activity, reporting conventions, or simply how each agency defines stop-type categories.</p>
-<p>Both agencies also include a nontrivial number of stops labeled NA. Because the SOPP documentation notes that some agencies merge multiple non-vehicular stop types or provide incomplete labels, it is likely that the NA category captures a mixture of possibilities, such as bicycle stops, scooter stops, or simply missing or inconsistently coded information. Because these labels do not correspond to a single, clearly defined type, they should not be interpreted substantively.</p>
-<p>Overall, this comparison is descriptive rather than inferential: the figure illustrates how each agency structures and reports its data, not how often particular behaviors occur or how enforcement differs across jurisdictions.</p>
+<p><strong>Reporting Conventions by Agency</strong></p>
+<p>The two agencies report broadly similar structures in their stop type distributions: both record overwhelmingly more vehicular stops than any other category. This consistency aligns with the expectation that traffic stop databases primarily capture driver interactions. However, Long Beach reports a noticeably larger number of stops classified as “pedestrian” compared with San Bernardino.</p>
+<p>This difference does not necessarily imply different enforcement intensity. Rather, the variation may reflect differences in population density or reporting conventions. Additionally, both agencies include stops labeled “NA” or with empty strings. Because the SOPP documentation notes that some agencies merge multiple non-vehicular stop types (Pierson et al., 2020), the “NA” category likely captures a mixture of poorly coded data rather than a specific type of stop.</p>
 </section>
-<section id="search-rates-and-frisk-rates-by-race-florida" class="level3">
-<h3 class="anchored" data-anchor-id="search-rates-and-frisk-rates-by-race-florida">Search Rates and Frisk Rates by Race: Florida</h3>
-<p>In the final part of this project, I analyze how often police searches and frisks occur during traffic stops in Florida, and how those decisions differ by race. The dataset includes search_conducted (whether any search occurred) and frisk_performed (whether a pat-down occurred).</p>
-<p>Before computing rates, I combined ambiguous racial categories such as NA, “unknown”, and “other” into a single group labeled “unknown/other”. These entries are recorded inconsistently and do not correspond to a clearly defined racial group. In the raw data, for example, the NA category had an unusually high frisk rate, which almost certainly reflects missing or miscoded values rather than a meaningful disparity. Collapsing these ambiguous categories prevents over-interpreting noisy or incomplete data.</p>
-<p><em>Search + Frisk Rates (SQL)</em></p>
+<section id="search-and-frisk-rates-by-race-florida" class="level3">
+<h3 class="anchored" data-anchor-id="search-and-frisk-rates-by-race-florida">Search and Frisk Rates by Race: Florida</h3>
+<p>In the final section, I analyze how often police searches and frisks occur during traffic stops in Florida. The dataset includes flags for search_conducted and frisk_performed. Before computing rates, I categorize ambiguous racial categories (NA, “unknown”, “other”) into a single group to prevent misinterpreting missing data as a substantive demographic finding.</p>
 <div class="cell" data-output.var="fl_search">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">WHEN</span> subject_race <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> subject_race <span class="kw">IN</span> (<span class="st">'other'</span>, <span class="st">'unknown'</span>, <span class="st">''</span>) <span class="cf">THEN</span> <span class="st">'unknown/other'</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">ELSE</span> subject_race</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> <span class="kw">AS</span> race,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> total_stops,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> search_conducted <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> num_searches,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> frisk_performed <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> num_frisk,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fl">1.0</span> <span class="op">*</span> <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> search_conducted <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="op">/</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> search_rate,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fl">1.0</span> <span class="op">*</span> <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> frisk_performed <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="op">/</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> frisk_rate</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> fl_statewide_2020_04_01</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> race;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">CASE</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">WHEN</span> subject_race <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> subject_race <span class="kw">IN</span> (<span class="st">'other'</span>, <span class="st">'unknown'</span>, <span class="st">''</span>) <span class="cf">THEN</span> <span class="st">'unknown/other'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">ELSE</span> subject_race</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">END</span> <span class="kw">AS</span> race,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> total_stops,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> search_conducted <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> num_searches,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> frisk_performed <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> num_frisk,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fl">1.0</span> <span class="op">*</span> <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> search_conducted <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="op">/</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> search_rate,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fl">1.0</span> <span class="op">*</span> <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> frisk_performed <span class="op">=</span> <span class="dv">1</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="op">/</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> frisk_rate</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> fl_statewide_2020_04_01</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> race;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><em>Visualization: Search &amp; Frisk Rates</em></p>
+<p><strong>Visualization: Disparities in Post-Stop Outcomes</strong></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>fl_search_long <span class="ot">&lt;-</span> fl_search <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race, search_rate, frisk_rate) <span class="sc">|&gt;</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">factor</span>(race)) <span class="sc">|&gt;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(search_rate, frisk_rate),</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"metric"</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rate"</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">metric =</span> <span class="fu">recode</span>(</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      metric,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"search_rate"</span> <span class="ot">=</span> <span class="st">"Search rate"</span>,</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"frisk_rate"</span>  <span class="ot">=</span> <span class="st">"Frisk rate"</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fl_search_long,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> race, <span class="at">y =</span> rate, <span class="at">fill =</span> race)) <span class="sc">+</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> metric, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="fl">0.01</span>)) <span class="sc">+</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Search and Frisk Rates by Race in Florida"</span>,</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Race"</span>,</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Share of Stops Involving a Search or Frisk"</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">"lines"</span>)</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fl_search_long <span class="ot">&lt;-</span> fl_search <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(bit64<span class="sc">::</span>is.integer64), as.integer)) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race, search_rate, frisk_rate) <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">factor</span>(race)) <span class="sc">|&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(search_rate, frisk_rate),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"metric"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rate"</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">metric =</span> <span class="fu">recode</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      metric,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"search_rate"</span> <span class="ot">=</span> <span class="st">"Search Rate"</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"frisk_rate"</span>  <span class="ot">=</span> <span class="st">"Frisk Rate"</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fl_search_long,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> race, <span class="at">y =</span> rate, <span class="at">fill =</span> race)) <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> metric, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="fl">0.01</span>)) <span class="sc">+</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Search and Frisk Rates by Race in Florida"</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Race"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Share of Stops Involving a Search or Frisk"</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">3</span>, <span class="st">"lines"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="policingdata_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="policingdata_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="A faceted bar chart showing search and frisk rates by race in Florida. The top bar in both panels corresponds to Black drivers, showing the highest rates for both searches and frisks. Hispanic and White drivers show lower rates. The frisk rates are significantly lower overall (close to 0%) compared to search rates." width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><em>What does this mean?</em></p>
-<p>In this Florida dataset, searches happen more often than frisks, though both are rare compared to the total number of stops. Frisk rates are particularly low (mostly under 0.01%), which is why the axis sits close to zero despite some variation across groups.</p>
-<p>Black drivers have the highest search rate, followed by Hispanic and White drivers. We see a similar pattern with frisks, but because the actual numbers are so small, these results should be viewed with caution: when an event is this rare, even tiny numerical differences can look significant on a chart.</p>
-<p>Ambiguous categories such as “NA,” “unknown,” and “other” were collapsed because they likely reflect inconsistent or missing data rather than meaningful population groups. In the raw data, for example, the NA category showed an implausibly high frisk rate. This pattern is likely more consistent with miscoding than substantive disparity. Collapsing these categories helps avoid overinterpreting noise and keeps the comparison focused on th distinct groups.</p>
-<p><strong>Conclusion</strong></p>
-<p>In summary, this project used three different slices of the SOPP database to describe how traffic stop data is structured, rather than attempting to prove causal links in policing. In New York, the data shows that the majority of stops involve white drivers, though that share is declining over time while the proportion of Black and Hispanic drivers has seen a modest rise. For Long Beach and San Bernardino, the overwhelming majority of stops are categorized as vehicular. Since pedestrian or ambiguous stops are rare, this suggests the dataset focuses heavily on driver-officer interactions.</p>
-<p>The Florida analysis looked at post-stop outcomes, finding that while searches and frisks are rare events overall, recorded rates are highest for Black drivers. Throughout the analysis, I treated ambiguous labels like “NA” or “unknown” as likely data noise rather than distinct groups. Ultimately, these findings clarify what the SOPP data can tell us about how agencies record stops, while emphasizing the need to understand reporting differences and data limits before making broader generalizations.</p>
-<p><strong>Sources</strong></p>
+<p><strong>Analysis of Search and Frisk Rates</strong></p>
+<p>In the Florida dataset, searches occur more frequently than frisks, though both events are rare relative to the total number of stops. Frisk rates are particularly low, generally falling below 0.5% for all groups.</p>
+<p>Despite the low overall frequency, the data indicates that Black drivers experience the highest rates of both searches and frisks, followed by Hispanic and White drivers. The ambiguous category (“unknown/other”) was separated to avoid skewing the results, as raw data inspection revealed unusually high frisk rates for missing values—likely a sign of data entry error rather than a trend. These results describe the disparities recorded in the administrative logs, but without controlling for context (such as the reason for the stop), they represent descriptive correlations rather than causal evidence of bias.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>This project utilized three distinct subsets of the SOPP database (Pierson et al., 2020) to characterize how traffic stops are recorded across different jurisdictions.</p>
+<ul>
+<li>New York: The racial composition of recorded stops has shifted slightly over time, with the proportion of stops involving Black and Hispanic drivers rising between 2010 and 2018.</li>
+<li>California: Comparing Long Beach and San Bernardino reveals that while vehicular stops dominate both datasets, agencies differ in their capture of pedestrian interactions.</li>
+<li>Florida: Analysis of post-stop outcomes highlights that Black drivers have the highest recorded search and frisk rates, though these events remain rare overall.</li>
+</ul>
+<p>These findings underscore the importance of understanding data definitions and reporting conventions before drawing broad conclusions about policing from administrative data.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con_traffic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>References</strong></p>
+<p>Pierson, E., Simoiu, C., Overgoor, J., Corbett-Davies, S., Jenson, D., Shoemaker, A., Ramachandran, V., et al.&nbsp;(2020). “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” <em>Nature Human Behaviour</em>, 1–10.</p>
 <p>Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: <a href="https://openpolicing.stanford.edu" class="uri">https://openpolicing.stanford.edu</a>. Pierson et al.&nbsp;(2020).</p>
-<p>New York City Demographic Data. U.S. Census Bureau. New York, New York – Profile (Profile ID 16000US3651000). Demographics can be found at: <a href="https://censusreporter.org/profiles/16000US3651000-new-york-ny/" class="uri">https://censusreporter.org/profiles/16000US3651000-new-york-ny/</a></p>
-<p>(Note: CensusReporter provides a visualization layer, but all values originate from the U.S. Census Bureau.)</p>
-<p><strong><em>References</em></strong></p>
 
 
 </section>

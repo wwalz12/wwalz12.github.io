@@ -229,7 +229,7 @@ This project utilized three distinct subsets of the SOPP database (Pierson et al
 These findings underscore the importance of understanding data definitions and reporting conventions before drawing broad conclusions about policing from administrative data.
 
 ```{r}
-dbDisconnect(con_traffic)
+DBI::dbDisconnect(con_traffic)
 ```
 
 **References**
