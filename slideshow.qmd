@@ -129,7 +129,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 - **San Bernardino:** Much more heavily concentrated in vehicular stops only  
 - **Long Beach:** Records a noticeable number of pedestrian stops
 
-Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type :::
+Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type
 
 :::
 
@@ -240,7 +240,7 @@ ggplot(fl_search_long,
   geom_col() +
   facet_wrap(~ metric, ncol = 2, scales = "free_x") +
   coord_flip() +
-  scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 0.01)) +
   labs(
     title = "Search & Frisk Rates (Florida)",
     x = "Race",
