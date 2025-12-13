@@ -224,6 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Using SQL and R, this project explores how traffic stop data is structured across three U.S. agencies in the Stanford Open Policing Project (SOPP) database (Pierson et al., 2020). My objective is descriptive: I summarize what the dataset records rather than inferring motivations or making causal claims behind the policing practices.</p>
 <p>I begin by examining how the racial composition of recorded stops in New York State changes over time. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types. Finally, I analyze search and frisk rates in Florida to see how they differ across racial categories while accounting for ambiguous or missing values.</p>
+<p><strong>Accessibility Note:</strong> All data visualizations in this report include alternative text (alt text) descriptions to ensure the findings are accessible to users with screen readers.</p>
 <section id="racial-distribution-of-traffic-stops-over-time-new-york-state" class="level3">
 <h3 class="anchored" data-anchor-id="racial-distribution-of-traffic-stops-over-time-new-york-state">Racial Distribution of Traffic Stops Over Time: New York State</h3>
 <p>To begin the analysis, I examine how the racial composition of recorded traffic stops in New York State changed between 2010 and 2018. The SQL query below groups stops by race and year and counts the number of stops in each category. Because the total number of enforcement actions varies across years, I convert these counts into percentages in R to allow for consistent comparison.</p>
@@ -452,12 +453,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Florida: Analysis of post-stop outcomes highlights that Black drivers have the highest recorded search and frisk rates, though these events remain rare overall.</li>
 </ul>
 <p>These findings underscore the importance of understanding data definitions and reporting conventions before drawing broad conclusions about policing from administrative data.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbDisconnect</span>(con_traffic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <p><strong>References</strong></p>
 <p>Pierson, E., Simoiu, C., Overgoor, J., Corbett-Davies, S., Jenson, D., Shoemaker, A., Ramachandran, V., et al.&nbsp;(2020). “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” <em>Nature Human Behaviour</em>, 1–10.</p>
 <p>Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: <a href="https://openpolicing.stanford.edu" class="uri">https://openpolicing.stanford.edu</a>. Pierson et al.&nbsp;(2020).</p>

@@ -22,6 +22,8 @@ website:
             text: Amazon Biased Robot
           - href: policingdata.qmd
             text: Analyzing US Policing Data
+      - href: slideshow.qmd
+      - text: Final Presentation
 format:
   html:
     theme:
@@ -31,4 +33,3 @@ format:
     page-layout: full
 
 editor: visual
-

@@ -12,7 +12,7 @@ execute:
   message: false
 ---
 
-Using SQL and R, this project explores how traffic stop data is structured across three U.S. agencies in the Stanford Open Policing Project (SOPP) database (Pierson et al., 2020). My objective is descriptive: I summarize what the dataset records rather than inferring motivations or making causal claims behind the policing practices.
+Using SQL and R, this project explores how traffic stop data is structured across three U.S. agencies in the Stanford Open Policing Project (SOPP) database (Pierson et al., 2020). My objective is descriptive, meaning I summarize what the dataset records rather than inferring motivations for actions or making causal claims behind the policing practices.
 
 I begin by examining how the racial composition of recorded stops in New York State changes over time. Next, I compare Long Beach and San Bernardino to demonstrate how different agencies categorize stop types. Finally, I analyze search and frisk rates in Florida to see how they differ across racial categories while accounting for ambiguous or missing values.
 
@@ -230,9 +230,11 @@ This project utilized three distinct subsets of the SOPP database (Pierson et al
 
 These findings underscore the importance of understanding data definitions and reporting conventions before drawing broad conclusions about policing from administrative data.
 
+
 ```{r}
-DBI::dbDisconnect(con_traffic)
+dbDisconnect(con_traffic)
 ```
+
 
 **References**
 
