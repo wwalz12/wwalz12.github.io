@@ -41,6 +41,9 @@ con_traffic <- DBI::dbConnect(
 knitr::opts_chunk$set(connection = "con_traffic")
 ```
 
+
+
+
 ## Project Overview
 
 **Goal**: To analyze traffic stop patterns across three U.S. jurisdictions using the Stanford Open Policing Project (SOPP).
@@ -71,6 +74,9 @@ knitr::opts_chunk$set(connection = "con_traffic")
 - **Context:** Data reflects recorded stops, not population demographics :::
 
 ::: {.column width="60%"}
+
+
+
 
 ```{sql connection = con_traffic, output.var = "ny_stops"}
 SELECT
@@ -111,6 +117,9 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
   theme_minimal(base_size = 16) +
   theme(legend.position = "bottom")
 ```
+
+
+
 :::
 
 ::::
@@ -130,6 +139,9 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type :::
 
 ::: {.column width="60%"}
+
+
+
 
 ```{sql connection = con_traffic, output.var = "ca_stops_combined"}
 (SELECT
@@ -175,6 +187,9 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
   theme_minimal(base_size = 16)
 ```
 
+
+
+
 :::
 
 ::::
@@ -192,6 +207,9 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
 - **Data note:** Ambiguous categories (“NA,” “unknown,” “other”) are collapsed into “unknown/other” to avoid over-interpreting miscoded or missing data :::
 
 ::: {.column width="60%"}
+
+
+
 
 ```{sql connection = con_traffic, output.var="fl_search"}
 SELECT
@@ -244,6 +262,9 @@ ggplot(fl_search_long,
   theme(legend.position = "none")
 ```
 
+
+
+
 :::
 
 ::::
@@ -262,12 +283,13 @@ Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the St
 
 
 
+
+
+
 ```{r}
 #| include: false
 if (DBI::dbIsValid(con_traffic)) {
 DBI::dbDisconnect(con_traffic)
 }
 ```
-
-
 
