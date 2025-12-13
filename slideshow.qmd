@@ -70,6 +70,8 @@ knitr::opts_chunk$set(connection = "con_traffic")
 - **Minority Trends:** Slight upward trend in recorded stops for Black and Hispanic drivers
 - **Context:** Data reflects recorded stops, not population demographics :::
 
+:::
+
 ::: {.column width="60%"}
 
 ```{sql connection = con_traffic, output.var = "ny_stops"}
