@@ -68,7 +68,7 @@ knitr::opts_chunk$set(connection = "con_traffic")
 
 - **White Drivers:** Represent the majority (70-78%), but share is declining
 - **Minority Trends:** Slight upward trend in recorded stops for Black and Hispanic drivers
-- **Context:** Data reflects recorded stops, not population demographics :::
+- **Context:** Data reflects recorded stops, not population demographics 
 
 :::
 
@@ -131,6 +131,8 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 
 Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type :::
 
+:::
+
 ::: {.column width="65%"}
 
 ```{sql connection = con_traffic, output.var = "ca_stops_combined"}
@@ -191,7 +193,9 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
 
 - **Rarity:** Searches are uncommon and frisks are even rarer (frisk rates generally well below 0.01% of stops).
 - **Recorded disparities:** In this dataset, Black drivers have the highest recorded search and frisk rates, followed by Hispanic and White drivers
-- **Data note:** Ambiguous categories (“NA,” “unknown,” “other”) are collapsed into “unknown/other” to avoid over-interpreting miscoded or missing data :::
+- **Data note:** Ambiguous categories (“NA,” “unknown,” “other”) are collapsed into “unknown/other” to avoid over-interpreting miscoded or missing data
+
+:::
 
 ::: {.column width="60%"}
 
