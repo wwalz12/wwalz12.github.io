@@ -8,6 +8,10 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: slideshow.qmd
+      - text: Final Presentation
+      - href: portfolio.qmd
+      - text: Portfolio
       - text: Data Visualizations
         menu:
           - href: dataviz.qmd
@@ -22,10 +26,6 @@ website:
             text: Amazon Biased Robot
           - href: policingdata.qmd
             text: Analyzing US Policing Data
-      - href: slideshow.qmd
-      - text: Final Presentation
-      - href: portfolio.qmd
-      - text: Portfolio
 format:
   html:
     theme:

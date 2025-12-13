@@ -58,7 +58,7 @@ knitr::opts_chunk$set(connection = "con_traffic")
 - **Analysis:** Descriptive only (administrative/reporting patterns, not causation).
 
 
-## Trend Analysis: New York State
+## Trend Analysis: New York State {.scrollable}
 
 :::: {.columns}
 
@@ -84,7 +84,7 @@ HAVING year BETWEEN 2010 AND 2018;
 ```
 
 ```{r}
-#| fig-height: 6
+#| fig-height: 4.5
 #| fig-alt: "Line chart of NY traffic stops by race over time."
 
 ny_stops_clean <- ny_stops |>
@@ -108,7 +108,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
     y = "Percent of Stops",
     color = "Race"
   ) +
-  theme_minimal(base_size = 16) +
+  theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 ```
 :::
@@ -119,7 +119,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 
 :::: {.columns}
 
-::: {.column width="40%"}
+::: {.column width="35%"}
 
 **Reporting differences**
 
@@ -129,7 +129,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 
 Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type :::
 
-::: {.column width="60%"}
+::: {.column width="65%"}
 
 ```{sql connection = con_traffic, output.var = "ca_stops_combined"}
 (SELECT
@@ -150,7 +150,7 @@ GROUP BY stop_type);
 ```
 
 ```{r}
-#| fig-height: 6
+#| fig-height: 4
 #| fig-alt: "Bar charts comparing stop types in Long Beach vs San Bernardino"
 
 combined_types <- ca_stops_combined |>
@@ -209,7 +209,7 @@ GROUP BY race;
 ```
 
 ```{r}
-#| fig-height: 6
+#| fig-height: 5
 #| fig-alt: "Faceted bar chart of search and frisk rates in Florida"
 
 fl_search_long <- fl_search |>
