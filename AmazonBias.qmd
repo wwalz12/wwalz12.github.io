@@ -1,0 +1,56 @@
+---
+title: "Project 4: The Amazon Recruiting Algorithm"
+author: William Walz
+date: November 12, 2025
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show code"
+execute: 
+  warning: false
+  message: false
+---
+
+## The Scenario: Automated Hiring at Amazon
+
+In 2014, Amazon attempted to automate the talent acquisition process by creating a machine learning algorithm to score job applicants (Dastin, 2018). The company aimed to increase efficiency by developing a tool that could evaluate 100 resumes and identify the top five candidates for recruitment. However, the engineering team eventually disbanded the project in 2015 because the model displayed a systematic bias against women (Dastin, 2018). The tool penalized resumes containing the word "women's" (e.g., "women's chess club captain") and downgraded graduates from two all-women's colleges (Dastin, 2018).
+
+## Recognizing and Mitigating Bias
+
+*Addressing the Data Value: "Recognize and mitigate bias in ourselves and in the data we use."*
+
+The Amazon recruiting tool failed to mitigate bias because the algorithm codified existing gender disparities found in the tech industry. Dastin (2018) reports that the model taught itself that male candidates were preferable because the training data favored terminology used more frequently by men, such as "executed" or "captured." Conversely, the system penalized resumes containing the word "women's." Goodman (2018) argues that such algorithms do not remove human bias but instead "launder" discrimination through software, giving the exclusion of women a veneer of objectivity. By automating the preference for male candidates, Amazon's tool amplified rather than mitigated the biases present in the hiring process.
+
+## Representativeness of the Sample
+
+*Addressing the Question: "Who was measured? Are those individuals representative of the people to whom we’d like to generalize?"*
+
+The data collection process relied on 10 years of resumes previously submitted to Amazon (Dastin, 2018). Because the technology sector is historically male dominated, the majority of the training data came from men. Consequently, the individuals measured were not representative of the ideal applicant pool, but rather representative of Amazon's past hiring preferences. Goodman (2018) notes that asking software to locate candidates who resemble a current workforce guarantees the reproduction of existing demographics. The lack of female representation in the training data caused the algorithm to treat female gender markers as negative variables, resulting in a failure to generalize fairly across all potential applicants.
+
+## Unintended Consequences and Open Discussion
+
+*Addressing the Data Value: "Respect and invite fair criticism while promoting the identification and open discussion of errors, risks, and unintended consequences of our work."*
+
+While Amazon intended to improve efficiency, the unintended consequence was the creation of a discriminatory sorting mechanism. The engineering team identified the risk that the tool would penalize gender-neutral resumes if the algorithm detected other correlations to gender (Dastin, 2018). However, Amazon failed to promote the "open discussion" of these errors. Dastin (2018) reveals that the company quietly disbanded the team and did not publicize the failure until Reuters investigated the matter years later. Rather than using the failure to inform the wider data science community about the risks of algorithmic hiring, Amazon attempted to keep the project's flaws secret, violating the principle of transparently discussing risks and consequences.
+
+## Ethical Implications and Accountability
+
+*Addressing the Data Value: "Consider carefully the ethical implications of choices we make when using data."*
+
+The ethical implications of using automated tools for hiring involve a lack of accountability and transparency for the applicants. Goodman (2018) highlights that if Amazon had deployed the tool, rejected applicants would have remained unaware that an algorithm had downgraded their resumes based on gender. Proving discrimination in such cases is "exceedingly difficult" because the decision-making logic is hidden inside proprietary software (Goodman, 2018). The choice to use this model shifts power away from the individual, who cannot provide informed consent or challenge the decision and concentrates power within the corporation. This dynamic creates a scenario where ethical violations can occur without detection or recourse.
+
+## Summary: Impact
+
+The Amazon recruiting case illustrates how data science can reinforce existing power structures when efficiency is prioritized over equality. 
+
+**Who benefits?** Amazon stood to benefit financially through the increased efficiency of their hiring pipeline and the reduction of human labor costs. 
+
+**Who is harmed?** Female applicants were the primary group neglected and harmed. The algorithm actively penalized their credentials based on historical patterns of exclusion in the tech industry. 
+
+**The Power Dynamic:** The ethical violations occurred in the interest of profit and efficiency. By relying on historical data without correcting for historical injustice, the project utilized data science to maintain the status quo of male dominance in the technology sector rather than challenging it.
+
+## References
+
+Dastin, J. (2018, October 10). *Amazon scraps secret AI recruiting tool that showed bias against women*. Reuters. [https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G/](https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G/)
+
+Goodman, R. (2018, October 16). *Why Amazon’s Automated Hiring Tool Discriminated Against Women*. ACLU News & Commentary. [https://www.aclu.org/news/womens-rights/why-amazons-automated-hiring-tool-discriminated-against-women](https://www.aclu.org/news/womens-rights/why-amazons-automated-hiring-tool-discriminated-against-women)
