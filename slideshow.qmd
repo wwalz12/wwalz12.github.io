@@ -37,6 +37,8 @@ con_traffic <- DBI::dbConnect(
   user = Sys.getenv("TRAFFIC_USER"),
   password = Sys.getenv("TRAFFIC_PWD")
 )
+
+knitr::opts_chunk$set(connection = "con_traffic")
 ```
 
 ## Project Overview

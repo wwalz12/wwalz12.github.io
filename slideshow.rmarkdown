@@ -37,7 +37,10 @@ con_traffic <- DBI::dbConnect(
   user = Sys.getenv("TRAFFIC_USER"),
   password = Sys.getenv("TRAFFIC_PWD")
 )
+
+knitr::opts_chunk$set(connection = "con_traffic")
 ```
+
 
 
 
@@ -71,6 +74,7 @@ con_traffic <- DBI::dbConnect(
 - **Context:** Data reflects recorded stops, not population demographics :::
 
 ::: {.column width="60%"}
+
 
 
 
@@ -115,6 +119,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 ```
 
 
+
 :::
 
 ::::
@@ -134,6 +139,7 @@ ggplot(ny_stops_pct, aes(x = year, y = pct, color = race)) +
 Data note: The “NA/Unknown” category likely mixes bikes, scooters, or other missing labels and should be treated as a reporting consistency rather than a real stop type :::
 
 ::: {.column width="60%"}
+
 
 
 
@@ -183,6 +189,7 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
 
 
 
+
 :::
 
 ::::
@@ -200,6 +207,7 @@ ggplot(combined_types, aes(x = stop_type, y = type_count)) +
 - **Data note:** Ambiguous categories (“NA,” “unknown,” “other”) are collapsed into “unknown/other” to avoid over-interpreting miscoded or missing data :::
 
 ::: {.column width="60%"}
+
 
 
 
@@ -256,6 +264,7 @@ ggplot(fl_search_long,
 
 
 
+
 :::
 
 ::::
@@ -271,6 +280,7 @@ ggplot(fl_search_long,
 Pierson, E., Simoiu, C., Overgoor, J., Corbett-Davies, S., Jenson, D., Shoemaker, A., Ramachandran, V., et al. (2020). "A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States." *Nature Human Behaviour*, 1–10.
 
 Stanford Open Policing Project (SOPP) Data. Traffic stop data compiled by the Stanford Open Policing Project and accessed through the Pomona College SQL server. Original dataset and documentation available at: <https://openpolicing.stanford.edu>. Pierson et al. (2020).
+
 
 
 
