@@ -24,6 +24,8 @@ website:
             text: Analyzing US Policing Data
       - href: slideshow.qmd
       - text: Final Presentation
+      - href: portfolio.qmd
+      - text: Portfolio
 format:
   html:
     theme:
